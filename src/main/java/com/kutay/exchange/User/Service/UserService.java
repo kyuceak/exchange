@@ -6,10 +6,10 @@ import com.kutay.exchange.User.DTO.UserResponseDTO;
 import java.util.List;
 
 public interface UserService {
-    public UserResponseDTO createUser(UserRequestDTO dto);
-    public void updateUser(UserRequestDTO dto);
-    public List<UserResponseDTO> readUsers();
-    public UserResponseDTO readUser(Long userId);
+     UserResponseDTO createUser(UserRequestDTO dto);
+     void updateUser(UserRequestDTO dto);
+     List<UserResponseDTO> readUsers();
+     UserResponseDTO readUser(Long userId);
 
 
 
