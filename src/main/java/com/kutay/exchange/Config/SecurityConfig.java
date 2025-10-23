@@ -1,9 +1,6 @@
 package com.kutay.exchange.Config;
 
-import com.kutay.exchange.Auth.JWT.JWTAuthenticationFilter;
-import com.kutay.exchange.Auth.JWT.JWTAuthenticationProvider;
-import com.kutay.exchange.Auth.JWT.JWTUtil;
-import com.kutay.exchange.Auth.JWT.JWTValidationFilter;
+import com.kutay.exchange.Auth.JWT.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -51,6 +48,8 @@ public class SecurityConfig {
 
         JWTValidationFilter jwtValidationFilter = new JWTValidationFilter(authenticationManager);
 
+        JWTRefreshFilter jwtRefreshFilter = new JWTRefreshFilter(authenticationManager, jwtUtil);
+
         http.authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/auth/register").permitAll()
                         .anyRequest().authenticated())
@@ -58,7 +57,8 @@ public class SecurityConfig {
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .csrf(csrf -> csrf.disable())
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
-                .addFilterAfter(jwtValidationFilter, JWTAuthenticationFilter.class);
+                .addFilterAfter(jwtValidationFilter, JWTAuthenticationFilter.class)
+                .addFilterAfter(jwtRefreshFilter, JWTValidationFilter.class);
 
         return http.build();
     }

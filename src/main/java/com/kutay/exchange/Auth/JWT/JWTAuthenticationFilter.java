@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kutay.exchange.Auth.DTO.LoginRequest;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -41,9 +42,15 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
         if (authResult.isAuthenticated()) {
             String token = jwtUtil.generateToken(authResult.getName(), 15);
             response.setHeader("Authorization", "Bearer " + token);
+
+
+            String refreshToken = jwtUtil.generateToken(authResult.getName(), 7 * 24 * 60);
+            Cookie refreshCookie = new Cookie("refreshToken", refreshToken);
+            refreshCookie.setHttpOnly(true);
+            refreshCookie.setSecure(true);
+            refreshCookie.setPath("/api/auth/refresh-token");
+            refreshCookie.setMaxAge(7 * 24 * 60 * 60);
+            response.addCookie(refreshCookie);
         }
-
-        // refresh token implementation below
-
     }
 }
