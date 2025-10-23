@@ -1,4 +1,4 @@
-package com.kutay.exchange.Auth.Model.Entity;
+package com.kutay.exchange.User;
 
 public enum Role {
     ROLE_USER,
