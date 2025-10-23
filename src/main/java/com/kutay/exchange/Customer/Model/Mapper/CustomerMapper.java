@@ -4,29 +4,26 @@ import com.kutay.exchange.Auth.DTO.RegisterRequest;
 import com.kutay.exchange.common.DTO.UserResponseDTO;
 import com.kutay.exchange.Customer.Model.Entity.CustomerEntity;
 import com.kutay.exchange.common.Mapper.BaseMapper;
-import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Component;
-
-import java.time.LocalDateTime;
 
 @Component
 public class CustomerMapper extends BaseMapper<CustomerEntity, RegisterRequest, UserResponseDTO> {
     @Override
     public CustomerEntity convertToEntity(RegisterRequest dto, Object... args) {
-        CustomerEntity user = new CustomerEntity();
+        CustomerEntity customer = new CustomerEntity();
 
         if (dto != null) {
-            BeanUtils.copyProperties(dto, user);
+            customer.setFirstName(dto.firstName());
+            customer.setLastName(dto.lastName());
+            customer.setPhoneNumber(dto.phoneNumber());
+            customer.setAddress(dto.address());
         }
 
-        user.setCreatedAt(LocalDateTime.now());
-
-        return user;
+        return customer;
     }
 
     @Override
     public UserResponseDTO convertToDTO(CustomerEntity entity, Object... args) {
-
         UserResponseDTO userResponse = new UserResponseDTO(
                 entity.getFirstName()
                 , entity.getLastName()

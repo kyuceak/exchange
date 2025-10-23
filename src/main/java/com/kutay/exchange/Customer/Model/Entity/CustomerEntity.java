@@ -7,8 +7,8 @@ import lombok.Setter;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-@Entity // so that spring understands that its a table in the database
-@Table(name = "customers") // to override default names or add constraints
+@Entity
+@Table(name = "customers")
 @Getter
 @Setter
 public class CustomerEntity {
@@ -39,10 +39,8 @@ public class CustomerEntity {
 //    private List<WalletEntity> wallets = new ArrayList<>();
 
     @Column(nullable = false, updatable = false)
-    private LocalDateTime createdAt;
+    private LocalDateTime createdAt = LocalDateTime.now();
 
     @Column()
     private LocalDateTime updatedAt;
-
-
 }
