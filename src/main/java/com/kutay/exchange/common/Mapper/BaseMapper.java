@@ -1,4 +1,4 @@
-package com.kutay.exchange.User.Model.Mapper;
+package com.kutay.exchange.common.Mapper;
 
 import java.util.Collection;
 import java.util.List;
