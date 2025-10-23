@@ -34,6 +34,7 @@ public class AuthServiceImpl implements AuthService, UserDetailsService {
         AuthCredentialsEntity credentials = authMapper.convertToEntity(request);
         credentials.setPassword(passwordEncoder.encode(request.password()));
 
+
         CustomerEntity customer = customerService.createCustomer(request);
 
         credentials.setCustomerId(customer.getId());

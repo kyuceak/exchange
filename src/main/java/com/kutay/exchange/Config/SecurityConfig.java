@@ -1,7 +1,9 @@
 package com.kutay.exchange.Config;
 
 import com.kutay.exchange.Auth.JWT.JWTAuthenticationFilter;
+import com.kutay.exchange.Auth.JWT.JWTAuthenticationProvider;
 import com.kutay.exchange.Auth.JWT.JWTUtil;
+import com.kutay.exchange.Auth.JWT.JWTValidationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -37,10 +39,17 @@ public class SecurityConfig {
     }
 
     @Bean
+    public JWTAuthenticationProvider jwtAuthenticationProvider() {
+        return new JWTAuthenticationProvider(jwtUtil, userDetailsService);
+    }
+
+    @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http,
                                                    AuthenticationManager authenticationManager)
             throws Exception {
         JWTAuthenticationFilter jwtAuthFilter = new JWTAuthenticationFilter(authenticationManager, jwtUtil);
+
+        JWTValidationFilter jwtValidationFilter = new JWTValidationFilter(authenticationManager);
 
         http.authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/auth/register").permitAll()
@@ -48,14 +57,16 @@ public class SecurityConfig {
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .csrf(csrf -> csrf.disable())
-                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterAfter(jwtValidationFilter, JWTAuthenticationFilter.class);
 
         return http.build();
     }
 
     @Bean
     public AuthenticationManager authenticationManager() {
-        return new ProviderManager(Arrays.asList(daoAuthenticationProvider()));
+        return new ProviderManager(Arrays.asList(daoAuthenticationProvider(),
+                jwtAuthenticationProvider()));
     }
 
 

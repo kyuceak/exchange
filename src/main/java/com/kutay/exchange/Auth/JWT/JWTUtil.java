@@ -31,7 +31,7 @@ public class JWTUtil {
                 .compact();
     }
 
-    public String validateTokenAndExtractUsername(String token) {
+    public String validateTokenAndExtractEmail(String token) {
         // maybe add try catch
         return Jwts.parserBuilder()
                 .setSigningKey(key)
