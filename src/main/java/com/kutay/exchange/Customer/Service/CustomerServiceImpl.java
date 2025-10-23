@@ -6,6 +6,7 @@ import com.kutay.exchange.Customer.Model.Mapper.CustomerMapper;
 import com.kutay.exchange.Customer.Model.Entity.CustomerEntity;
 import com.kutay.exchange.Customer.Repository.CustomerRepository;
 import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,16 +14,11 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class CustomerServiceImpl implements CustomerService {
+
     private final CustomerRepository customerRepository;
-
     private final CustomerMapper customerMapper = new CustomerMapper();
-
-
-    @Autowired
-    public CustomerServiceImpl(CustomerRepository customerRepository) {
-        this.customerRepository = customerRepository;
-    }
 
 //    @Override
 //    @Transactional
@@ -57,15 +53,16 @@ public class CustomerServiceImpl implements CustomerService {
     @Transactional
     @Override
     public CustomerEntity createCustomer(RegisterRequest dto) {
+        CustomerEntity customer = customerMapper.convertToEntity(dto);
 
+        CustomerEntity db_customer = customerRepository.save(customer);
 
-        return null;
+        return db_customer;
     }
 
 
     @Override
     public UserResponseDTO readUser(Long userId) {
-
         Optional<CustomerEntity> result = customerRepository.findById(userId);
 
         CustomerEntity user = null;
@@ -82,10 +79,8 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public List<UserResponseDTO> readUsers() {
-
         List<CustomerEntity> users = customerRepository.findAll();
         System.out.println(users);
-
 
         return customerMapper.convertToDtoList(users);
     }

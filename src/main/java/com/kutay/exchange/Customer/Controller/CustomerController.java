@@ -1,7 +1,5 @@
 package com.kutay.exchange.Customer.Controller;
 
-
-import com.kutay.exchange.Customer.DTO.UpdateEmailRequest;
 import com.kutay.exchange.common.DTO.UserResponseDTO;
 import com.kutay.exchange.Customer.Service.CustomerServiceImpl;
 import org.springframework.web.bind.annotation.*;
@@ -9,7 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/users")
+@RequestMapping("/api/customers")
 public class CustomerController {
 
     private final CustomerServiceImpl customerService;
