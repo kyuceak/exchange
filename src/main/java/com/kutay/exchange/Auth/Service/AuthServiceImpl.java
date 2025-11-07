@@ -21,7 +21,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class AuthServiceImpl implements AuthService, UserDetailsService {
 
-    private final CustomerServiceImpl userService;
+    private final CustomerService userService;
     private final AuthRepository authRepository;
     private final PasswordEncoder passwordEncoder;
     private final AuthMapper authMapper;
