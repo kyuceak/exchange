@@ -1,6 +1,7 @@
 package com.kutay.exchange.Customer.Service;
 
 import com.kutay.exchange.Auth.DTO.RegisterRequest;
+import com.kutay.exchange.Customer.DTO.CustomerRequest;
 import com.kutay.exchange.common.DTO.UserResponseDTO;
 import com.kutay.exchange.Customer.Model.Mapper.CustomerMapper;
 import com.kutay.exchange.Customer.Model.Entity.CustomerEntity;
@@ -52,7 +53,7 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Transactional
     @Override
-    public CustomerEntity createCustomer(RegisterRequest dto) {
+    public CustomerEntity createCustomer(CustomerRequest dto) {
         CustomerEntity customer = customerMapper.convertToEntity(dto);
 
         CustomerEntity db_customer = customerRepository.save(customer);
