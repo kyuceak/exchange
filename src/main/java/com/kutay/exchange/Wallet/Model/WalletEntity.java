@@ -1,18 +1,14 @@
-package com.kutay.exchange.Wallet;
+package com.kutay.exchange.Wallet.Model;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name="wallets")
+@Table(name = "wallets")
 public class WalletEntity {
     @Id
     private Long id;
-
-
-
-
 
 
     public void setId(Long id) {
