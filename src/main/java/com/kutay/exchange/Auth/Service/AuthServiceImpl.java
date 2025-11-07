@@ -5,6 +5,7 @@ import com.kutay.exchange.Auth.DTO.RegisterRequest;
 import com.kutay.exchange.Auth.Model.Entity.AuthCredentialsEntity;
 import com.kutay.exchange.Auth.Model.Mapper.AuthMapper;
 import com.kutay.exchange.Auth.Repository.AuthRepository;
+import com.kutay.exchange.Customer.DTO.CustomerRequest;
 import com.kutay.exchange.Customer.Model.Entity.CustomerEntity;
 import com.kutay.exchange.Customer.Service.CustomerService;
 import com.kutay.exchange.Customer.Service.CustomerServiceImpl;
@@ -34,8 +35,8 @@ public class AuthServiceImpl implements AuthService, UserDetailsService {
         AuthCredentialsEntity credentials = authMapper.convertToEntity(request);
         credentials.setPassword(passwordEncoder.encode(request.password()));
 
-
-        CustomerEntity customer = customerService.createCustomer(request);
+        CustomerRequest req = authMapper.convertToCustomerRequest(request);
+        CustomerEntity customer = customerService.createCustomer(req);
 
         credentials.setCustomerId(customer.getId());
         authRepository.save(credentials);

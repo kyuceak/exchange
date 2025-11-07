@@ -3,6 +3,7 @@ package com.kutay.exchange.Auth.Model.Mapper;
 import com.kutay.exchange.Auth.DTO.AuthResponse;
 import com.kutay.exchange.Auth.DTO.RegisterRequest;
 import com.kutay.exchange.Auth.Model.Entity.AuthCredentialsEntity;
+import com.kutay.exchange.Customer.DTO.CustomerRequest;
 import com.kutay.exchange.Customer.Model.Entity.CustomerEntity;
 import com.kutay.exchange.common.Mapper.BaseMapper;
 import org.springframework.stereotype.Component;
@@ -40,4 +41,10 @@ public class AuthMapper extends BaseMapper<AuthCredentialsEntity, RegisterReques
         );
     }
 
+    public CustomerRequest convertToCustomerRequest(RegisterRequest dto) {
+
+        CustomerRequest req = new CustomerRequest(dto.firstName(), dto.lastName(), dto.phoneNumber(), dto.address());
+
+        return req;
+    }
 }
