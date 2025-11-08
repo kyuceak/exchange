@@ -5,7 +5,7 @@ import com.kutay.exchange.Auth.Model.Entity.Role;
 import java.util.UUID;
 
 public record AuthResponse(
-        UUID id,
+        Long id,
         String email,
         boolean emailVerified,
         String firstName,
@@ -13,5 +13,5 @@ public record AuthResponse(
         Role role,
         String phoneNumber,
         String address
-                           ) {
+) {
 }
