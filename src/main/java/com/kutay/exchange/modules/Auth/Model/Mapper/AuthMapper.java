@@ -4,7 +4,6 @@ import com.kutay.exchange.modules.Auth.DTO.AuthResponse;
 import com.kutay.exchange.modules.Auth.DTO.RegisterRequest;
 import com.kutay.exchange.modules.Auth.Model.Entity.AuthCredentialsEntity;
 import com.kutay.exchange.modules.Customer.api.DTO.CustomerRequest;
-import com.kutay.exchange.modules.Customer.Model.Entity.CustomerEntity;
 import com.kutay.exchange.common.Mapper.BaseMapper;
 import com.kutay.exchange.modules.Customer.api.DTO.CustomerResponse;
 import org.springframework.stereotype.Component;

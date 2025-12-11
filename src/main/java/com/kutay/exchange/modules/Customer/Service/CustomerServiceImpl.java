@@ -2,7 +2,7 @@ package com.kutay.exchange.modules.Customer.Service;
 
 import com.kutay.exchange.modules.Customer.api.DTO.CustomerRequest;
 import com.kutay.exchange.modules.Customer.Model.Mapper.CustomerMapper;
-import com.kutay.exchange.modules.Customer.Model.Entity.CustomerEntity;
+import com.kutay.exchange.modules.Customer.Model.Entity.Customer;
 import com.kutay.exchange.modules.Customer.Repository.CustomerRepository;
 import com.kutay.exchange.modules.Customer.api.DTO.CustomerResponse;
 import jakarta.transaction.Transactional;
@@ -52,18 +52,18 @@ public class CustomerServiceImpl implements CustomerService {
     @Transactional
     @Override
     public CustomerResponse createCustomer(CustomerRequest dto) {
-        CustomerEntity customer = customerMapper.convertToEntity(dto);
+        Customer customer = customerMapper.convertToEntity(dto);
 
-        CustomerEntity db_customer = customerRepository.save(customer);
+        Customer db_customer = customerRepository.save(customer);
 
         return customerMapper.convertToDTO(db_customer);
     }
 
     @Override
     public CustomerResponse readUser(Long userId) {
-        Optional<CustomerEntity> result = customerRepository.findById(userId);
+        Optional<Customer> result = customerRepository.findById(userId);
 
-        CustomerEntity user = null;
+        Customer user = null;
 
         if (result.isPresent()) {
             user = result.get();
@@ -77,7 +77,7 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public List<CustomerResponse> readUsers() {
-        List<CustomerEntity> users = customerRepository.findAll();
+        List<Customer> users = customerRepository.findAll();
         System.out.println(users);
 
         return customerMapper.convertToDtoList(users);

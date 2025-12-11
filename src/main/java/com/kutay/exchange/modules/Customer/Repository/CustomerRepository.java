@@ -1,12 +1,12 @@
 package com.kutay.exchange.modules.Customer.Repository;
 
 
-import com.kutay.exchange.modules.Customer.Model.Entity.CustomerEntity;
+import com.kutay.exchange.modules.Customer.Model.Entity.Customer;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface CustomerRepository extends JpaRepository<CustomerEntity, Long> {
+public interface CustomerRepository extends JpaRepository<Customer, Long> {
 //
 //
 //    boolean existsByUsername(String username);

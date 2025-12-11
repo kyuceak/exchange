@@ -20,13 +20,13 @@ public class WalletEntity {
     private Long id;
 
     @Column(nullable = false)
-    private String walledId;
+    private String walletAddress;
 
     @Column
-    private BigDecimal balance;
+    private BigDecimal balance; // BigDecimal --> exact decimal values,  not binary approximations like floating point.
 
     @Column
-    @Enumerated(EnumType.STRING)
+    @Enumerated(EnumType.STRING) // enum --> fixed values
     private Currency currency;
 
     @Column(nullable = false, updatable = false)

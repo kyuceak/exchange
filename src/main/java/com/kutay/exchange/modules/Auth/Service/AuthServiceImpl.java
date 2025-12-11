@@ -7,9 +7,6 @@ import com.kutay.exchange.modules.Auth.Model.Mapper.AuthMapper;
 import com.kutay.exchange.modules.Auth.Repository.AuthRepository;
 import com.kutay.exchange.modules.Customer.api.CustomerFacade;
 import com.kutay.exchange.modules.Customer.api.DTO.CustomerRequest;
-import com.kutay.exchange.modules.Customer.Service.CustomerService;
-import com.kutay.exchange.modules.Customer.Service.CustomerServiceImpl;
-import com.kutay.exchange.modules.Customer.Model.Mapper.CustomerMapper;
 import com.kutay.exchange.modules.Customer.api.DTO.CustomerResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -21,7 +18,6 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class AuthServiceImpl implements AuthService, UserDetailsService {
-
 
     private final AuthRepository authRepository;
     private final PasswordEncoder passwordEncoder;
