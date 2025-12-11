@@ -1,6 +1,6 @@
 package com.kutay.exchange.Config;
 
-import com.kutay.exchange.Auth.JWT.*;
+import com.kutay.exchange.modules.Auth.JWT.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
