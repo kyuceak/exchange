@@ -5,13 +5,12 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 @Entity
 @Table(name = "customers")
 @Getter
 @Setter
-public class CustomerEntity {
+public class Customer {
     @Id
     @GeneratedValue(
             strategy = GenerationType.SEQUENCE,
