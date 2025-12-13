@@ -19,21 +19,27 @@ public class WalletEntity {
             sequenceName = "wallet_id_seq")
     private Long id;
 
+//    @Column(nullable = false)
+//    private String walletAddress;
+
+//    @Column
+//    private BigDecimal balance; // BigDecimal --> exact decimal values,  not binary approximations like floating point.
+//
+//    @Column
+//    @Enumerated(EnumType.STRING) // enum --> fixed values
+//    private Currency currency;
+
     @Column(nullable = false)
-    private String walletAddress;
+    private Long customerId;
 
-    @Column
-    private BigDecimal balance; // BigDecimal --> exact decimal values,  not binary approximations like floating point.
+    @Enumerated(EnumType.STRING)
+    private WalletType type;
 
-    @Column
-    @Enumerated(EnumType.STRING) // enum --> fixed values
-    private Currency currency;
+    @Column(nullable = false)
+    private LocalDateTime created_at = LocalDateTime.now();
 
-    @Column(nullable = false, updatable = false)
-    private LocalDateTime createdAt = LocalDateTime.now();
-
-    @Column
-    private LocalDateTime updatedAt;
+    @Column(nullable = false)
+    private LocalDateTime updated_at = LocalDateTime.now();
 
 
 }
