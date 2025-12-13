@@ -31,7 +31,7 @@ public class Customer {
     @Column(nullable = false, unique = true)
     private String phoneNumber;
 
-    @Column()
+    @Column(nullable = false)
     private String address;
 
     // by default, it creates a new table which contains userid-walletid mapoing

@@ -2,7 +2,7 @@ package com.kutay.exchange.modules.Customer.Model.Mapper;
 
 import com.kutay.exchange.modules.Customer.api.DTO.CustomerRequest;
 import com.kutay.exchange.modules.Customer.Model.Entity.Customer;
-import com.kutay.exchange.common.Mapper.BaseMapper;
+import com.kutay.exchange.shared.Mapper.BaseMapper;
 import com.kutay.exchange.modules.Customer.api.DTO.CustomerResponse;
 import org.springframework.stereotype.Component;
 
