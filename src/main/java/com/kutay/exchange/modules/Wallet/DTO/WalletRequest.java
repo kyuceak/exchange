@@ -1,4 +1,6 @@
 package com.kutay.exchange.modules.Wallet.DTO;
 
-public record WalletRequest() {
+import com.kutay.exchange.modules.Wallet.Model.enums.WalletType;
+
+public record WalletRequest(Long customerId, WalletType type) {
 }
