@@ -1,6 +1,7 @@
 package com.kutay.exchange.modules.Wallet.Model;
 
 
+import com.kutay.exchange.modules.Wallet.Model.enums.Asset;
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;
