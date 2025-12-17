@@ -24,7 +24,7 @@ public class WalletEntity {
     public WalletEntity() {
     }
 
-    private WalletEntity(Long customerId, WalletType walletType) {
+    public WalletEntity(Long customerId, WalletType walletType) {
         this.customerId = Objects.requireNonNull(customerId);
         this.walletType = Objects.requireNonNull(walletType);
         this.walletStatus = WalletStatus.ACTIVE;
@@ -71,7 +71,6 @@ public class WalletEntity {
         if (walletStatus != WalletStatus.FROZEN) {
             throw new IllegalStateException("Wallet is not frozen");
         }
-
         walletStatus = WalletStatus.ACTIVE;
     }
 }
