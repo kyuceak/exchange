@@ -2,6 +2,7 @@ package com.kutay.exchange.modules.Wallet.domain.model;
 
 import com.kutay.exchange.modules.Wallet.domain.model.enums.WalletStatus;
 import com.kutay.exchange.modules.Wallet.domain.model.enums.WalletType;
+import com.kutay.exchange.shared.AbstractBaseEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -13,7 +14,7 @@ import java.util.Objects;
 @Table(name = "wallets")
 @Getter
 @Setter
-public class WalletEntity {
+public class WalletEntity extends AbstractBaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE,
             generator = "wallets_id_generator")
@@ -33,7 +34,6 @@ public class WalletEntity {
     @Column(nullable = false, updatable = false)
     private Long customerId;
 
-
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private WalletStatus walletStatus;
@@ -41,23 +41,6 @@ public class WalletEntity {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private WalletType walletType;
-
-    @Column(nullable = false)
-    private Instant created_at;
-
-    @Column(nullable = false)
-    private Instant updated_at;
-
-    @PrePersist
-    protected void onCreate() {
-        this.created_at = Instant.now();
-        this.updated_at = Instant.now();
-    }
-
-    @PreUpdate
-    protected void onUpdate() {
-        this.updated_at = Instant.now();
-    }
 
     public void freeze() {
         if (walletStatus == WalletStatus.CLOSED) {

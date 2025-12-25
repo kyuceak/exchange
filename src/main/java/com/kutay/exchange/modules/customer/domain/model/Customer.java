@@ -1,5 +1,6 @@
 package com.kutay.exchange.modules.customer.domain.model;
 
+import com.kutay.exchange.shared.AbstractBaseEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -10,7 +11,7 @@ import java.time.LocalDateTime;
 @Table(name = "customers")
 @Getter
 @Setter
-public class Customer {
+public class Customer extends AbstractBaseEntity {
     @Id
     @GeneratedValue(
             strategy = GenerationType.SEQUENCE,
@@ -42,10 +43,4 @@ public class Customer {
 
 //    @OneToMany(cascade = CascadeType.ALL)
 //    private List<WalletEntity> wallets = new ArrayList<>();
-
-    @Column(nullable = false, updatable = false)
-    private LocalDateTime createdAt = LocalDateTime.now();
-
-    @Column()
-    private LocalDateTime updatedAt;
 }

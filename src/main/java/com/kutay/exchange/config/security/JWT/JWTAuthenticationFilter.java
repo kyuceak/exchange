@@ -1,4 +1,4 @@
-package com.kutay.exchange.Config.security.JWT;
+package com.kutay.exchange.config.security.JWT;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.FilterChain;
