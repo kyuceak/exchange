@@ -9,5 +9,7 @@ public enum LedgerType {
 
     // TRADING
     TRADE_FILL,
-    TRADE_FEE
+    TRADE_FEE,
+
+    REFUND
 }
