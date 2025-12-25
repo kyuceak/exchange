@@ -22,7 +22,7 @@ public class WalletMapper extends BaseMapper<WalletEntity, WalletRequest, Wallet
                 entity.getId(),
                 entity.getWalletType(),
                 entity.getWalletStatus(),
-                entity.getCreated_at()
+                entity.getCreatedAt()
         );
 
         return dto;

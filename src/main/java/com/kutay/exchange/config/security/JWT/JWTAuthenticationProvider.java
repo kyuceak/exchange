@@ -1,4 +1,4 @@
-package com.kutay.exchange.Config.security.JWT;
+package com.kutay.exchange.config.security.JWT;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationProvider;

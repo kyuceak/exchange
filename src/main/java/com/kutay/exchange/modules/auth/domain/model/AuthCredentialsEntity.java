@@ -1,6 +1,7 @@
 package com.kutay.exchange.modules.auth.domain.model;
 
 
+import com.kutay.exchange.shared.AbstractBaseEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -16,7 +17,7 @@ import java.util.List;
 @Table(name = "auth_users")
 @Getter
 @Setter
-public class AuthCredentialsEntity implements UserDetails {
+public class AuthCredentialsEntity extends AbstractBaseEntity implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE,
@@ -46,12 +47,6 @@ public class AuthCredentialsEntity implements UserDetails {
     @Column()
     @Enumerated(EnumType.STRING) // db doesn't know how to store ENUM, specify it
     private UserStatus status = UserStatus.ACTIVE; // check later for KYC
-
-    @Column(nullable = false, updatable = false)
-    private LocalDateTime createdAt = LocalDateTime.now();
-
-    @Column
-    private LocalDateTime updatedAt;
 
     @Column
     private LocalDateTime lastLoginAt;

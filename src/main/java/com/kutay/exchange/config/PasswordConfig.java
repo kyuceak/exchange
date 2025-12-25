@@ -1,4 +1,4 @@
-package com.kutay.exchange.Config;
+package com.kutay.exchange.config;
 
 
 import org.springframework.context.annotation.Bean;
