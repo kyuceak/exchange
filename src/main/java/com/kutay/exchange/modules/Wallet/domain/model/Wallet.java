@@ -4,43 +4,55 @@ import com.kutay.exchange.modules.Wallet.domain.model.enums.WalletStatus;
 import com.kutay.exchange.modules.Wallet.domain.model.enums.WalletType;
 import com.kutay.exchange.shared.AbstractBaseEntity;
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.time.Instant;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
+import java.util.UUID;
 
 @Entity
 @Table(name = "wallets")
 @Getter
 @Setter
-public class WalletEntity extends AbstractBaseEntity {
+@Builder
+//@SequenceGenerator(name = "wallets_id_generator",
+//        sequenceName = "wallet_id_seq")
+public class Wallet extends AbstractBaseEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE,
-            generator = "wallets_id_generator")
-    @SequenceGenerator(name = "wallets_id_generator",
-            sequenceName = "wallet_id_seq")
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
 
-    public WalletEntity() {
+    public Wallet() {
     }
 
-    public WalletEntity(Long customerId, WalletType walletType) {
+    public Wallet(Long customerId, WalletType walletType) {
         this.customerId = Objects.requireNonNull(customerId);
         this.walletType = Objects.requireNonNull(walletType);
         this.walletStatus = WalletStatus.ACTIVE;
     }
 
-    @Column(nullable = false, updatable = false)
+    @Column(name = "user_id", nullable = false, updatable = false)
     private Long customerId;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
+    @Column(name = "wallet_status", nullable = false)
     private WalletStatus walletStatus;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
+    @Column(name = "wallet_type", nullable = false, updatable = false)
     private WalletType walletType;
+
+    @OneToMany(mappedBy = "wallet",
+            cascade = {CascadeType.PERSIST, CascadeType.MERGE},
+            fetch = FetchType.LAZY,
+            orphanRemoval = true)
+    private Set<WalletAsset> assets = new HashSet<>();
+
+    @Version
+    private Long version;
 
     public void freeze() {
         if (walletStatus == WalletStatus.CLOSED) {
