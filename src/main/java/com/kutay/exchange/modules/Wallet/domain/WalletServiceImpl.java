@@ -3,7 +3,7 @@ package com.kutay.exchange.modules.Wallet.domain;
 import com.kutay.exchange.modules.Wallet.web.DTO.WalletRequest;
 import com.kutay.exchange.modules.Wallet.web.DTO.WalletResponse;
 import com.kutay.exchange.modules.Wallet.mapper.WalletMapper;
-import com.kutay.exchange.modules.Wallet.domain.model.WalletEntity;
+import com.kutay.exchange.modules.Wallet.domain.model.Wallet;
 import com.kutay.exchange.modules.Wallet.domain.model.enums.WalletStatus;
 import com.kutay.exchange.modules.Wallet.infrastructure.persistence.WalletRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -22,16 +22,16 @@ public class WalletServiceImpl {
 
     public List<WalletResponse> getAllWallets() {
 
-        List<WalletEntity> wallets = walletRepository.findAll();
+        List<Wallet> wallets = walletRepository.findAll();
 
         return walletMapper.convertToDtoList(wallets);
     }
 
     public WalletResponse getWallet(Long walletId) {
 
-        Optional<WalletEntity> result = walletRepository.findById(walletId);
+        Optional<Wallet> result = walletRepository.findById(walletId);
 
-        WalletEntity wallet = null;
+        Wallet wallet = null;
 
         if (result.isPresent()) {
             wallet = result.get();
@@ -44,15 +44,15 @@ public class WalletServiceImpl {
 
     public List<WalletResponse> getWalletsForCustomer(Long customerId) {
 
-        List<WalletEntity> customerWallets = walletRepository.findAllByCustomerId(customerId);
+        List<Wallet> customerWallets = walletRepository.findAllByCustomerId(customerId);
 
         return walletMapper.convertToDtoList(customerWallets);
     }
 
     public WalletResponse createWallet(WalletRequest dto) {
-        WalletEntity walletEntity = new WalletEntity(dto.customerId(), dto.walletType());
+        Wallet wallet = new Wallet(dto.customerId(), dto.walletType());
 
-        WalletEntity db_wallet = walletRepository.save(walletEntity);
+        Wallet db_wallet = walletRepository.save(wallet);
 
         return walletMapper.convertToDTO(db_wallet);
     }
@@ -63,7 +63,7 @@ public class WalletServiceImpl {
 
     public void validateWalletIsActive(Long walletId) {
 
-        WalletEntity wallet = walletRepository.findById(walletId).orElseThrow(() ->
+        Wallet wallet = walletRepository.findById(walletId).orElseThrow(() ->
                 new EntityNotFoundException("Wallet not found " + walletId));
 
 

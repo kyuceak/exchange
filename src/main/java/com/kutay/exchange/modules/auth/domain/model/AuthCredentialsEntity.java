@@ -12,19 +12,20 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
+import java.util.UUID;
 
 @Entity
 @Table(name = "auth_users")
 @Getter
 @Setter
+@SequenceGenerator(name = "credentials_id_generator",
+        sequenceName = "credentials_id_seq"
+)
 public class AuthCredentialsEntity extends AbstractBaseEntity implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE,
             generator = "credentials_id_generator")
-    @SequenceGenerator(name = "credentials_id_generator",
-            sequenceName = "credentials_id_seq"
-    )
     @Column(updatable = false, nullable = false)
     private Long id;
 

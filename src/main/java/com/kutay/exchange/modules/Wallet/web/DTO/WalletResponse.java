@@ -4,8 +4,9 @@ import com.kutay.exchange.modules.Wallet.domain.model.enums.WalletStatus;
 import com.kutay.exchange.modules.Wallet.domain.model.enums.WalletType;
 
 import java.time.Instant;
+import java.util.UUID;
 
-public record WalletResponse(Long walletId,
+public record WalletResponse(UUID walletId,
                              WalletType walletType,
                              WalletStatus walletStatus,
                              Instant createdAt) {
