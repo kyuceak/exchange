@@ -1,16 +1,12 @@
 package com.kutay.exchange.modules.Wallet.domain.model;
 
-
 import com.kutay.exchange.modules.Wallet.domain.model.enums.Asset;
 import com.kutay.exchange.modules.Wallet.domain.model.enums.DepositStatus;
 import jakarta.persistence.*;
 
-import java.time.Instant;
-
 @Entity
 @Table(name = "deposits")
 public class Deposit {
-
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE,
             generator = "deposit_id_gen")
@@ -31,8 +27,4 @@ public class Deposit {
 
     @Enumerated(EnumType.STRING)
     private DepositStatus status;
-
-    private Instant createdAt;
-
-    private Instant confirmedAt;
 }
