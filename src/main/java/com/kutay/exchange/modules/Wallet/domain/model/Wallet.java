@@ -4,19 +4,23 @@ import com.kutay.exchange.modules.Wallet.domain.model.enums.WalletStatus;
 import com.kutay.exchange.modules.Wallet.domain.model.enums.WalletType;
 import com.kutay.exchange.shared.AbstractBaseEntity;
 import jakarta.persistence.*;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.HashSet;
-import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 
 @Entity
-@Table(name = "wallets")
+@Table(name = "wallets", indexes = {
+        @Index(name = "idx_user_id", columnList = "customer_id"),
+        @Index(name = "idx_wallet_type", columnList = "wallet_type"),
+        @Index(name = "idx_wallet_status", columnList = "wallet_status"),
+        @Index(name = "idx_user_type", columnList = "user_id, wallet_type")
+})
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Builder
 //@SequenceGenerator(name = "wallets_id_generator",
 //        sequenceName = "wallet_id_seq")
@@ -25,16 +29,7 @@ public class Wallet extends AbstractBaseEntity {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    public Wallet() {
-    }
-
-    public Wallet(Long customerId, WalletType walletType) {
-        this.customerId = Objects.requireNonNull(customerId);
-        this.walletType = Objects.requireNonNull(walletType);
-        this.walletStatus = WalletStatus.ACTIVE;
-    }
-
-    @Column(name = "user_id", nullable = false, updatable = false)
+    @Column(name = "customer_id", nullable = false, updatable = false)
     private Long customerId;
 
     @Enumerated(EnumType.STRING)
@@ -48,7 +43,7 @@ public class Wallet extends AbstractBaseEntity {
     @OneToMany(mappedBy = "wallet",
             cascade = {CascadeType.PERSIST, CascadeType.MERGE},
             fetch = FetchType.LAZY,
-            orphanRemoval = true)
+            orphanRemoval = true) // if removed in set, it will be deleted from db
     private Set<WalletAsset> assets = new HashSet<>();
 
     @Version
