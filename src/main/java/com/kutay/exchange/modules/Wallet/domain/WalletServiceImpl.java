@@ -16,7 +16,6 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class WalletServiceImpl {
-
     private final WalletRepository walletRepository;
     private final WalletMapper walletMapper = new WalletMapper();
 
@@ -50,7 +49,11 @@ public class WalletServiceImpl {
     }
 
     public WalletResponse createWallet(WalletRequest dto) {
-        Wallet wallet = new Wallet(dto.customerId(), dto.walletType());
+        Wallet wallet = Wallet.builder()
+                .customerId(dto.customerId())
+                .walletType(dto.walletType())
+                .walletStatus(WalletStatus.ACTIVE)
+                .build();
 
         Wallet db_wallet = walletRepository.save(wallet);
 
