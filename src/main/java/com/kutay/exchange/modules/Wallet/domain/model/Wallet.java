@@ -22,8 +22,6 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-//@SequenceGenerator(name = "wallets_id_generator",
-//        sequenceName = "wallet_id_seq")
 public class Wallet extends AbstractBaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
