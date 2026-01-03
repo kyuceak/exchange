@@ -1,4 +1,4 @@
-package com.kutay.exchange.modules.Wallet.domain.model.enums;
+package com.kutay.exchange.shared.model;
 
 /**
  * Supported cryptocurrency and fiat assets.
