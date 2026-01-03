@@ -24,7 +24,6 @@ import java.util.UUID;
         indexes = {
                 @Index(name = "idx_account_wallet_id", columnList = "walletId"),
                 @Index(name = "idx_account_asset", columnList = "asset"),
-                @Index(name = "idx_account_currency", columnList = "currency")
         })
 @Getter
 @NoArgsConstructor

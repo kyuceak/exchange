@@ -18,7 +18,8 @@ import java.util.UUID;
                 // unnecessary index, in below index since transaction_id is left most index single queries will hit composite index
                 //@Index(name = "idx_txid_reference", columnList = "transaction_id"),
                 @Index(name = "idx_txid_created_at", columnList = "transaction_id, created_at"),
-                @Index(name = "idx_direction", columnList = "direction"),})
+                @Index(name = "idx_direction", columnList = "direction"),
+                @Index(name = "idx_account_id", columnList = "account_id")})
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
@@ -56,4 +57,8 @@ public class Entry extends AbstractBaseEntity {
 
     @Column(nullable = false)
     private boolean settled = false;
+
+    public void markSettled() {
+        this.settled = true;
+    }
 }
