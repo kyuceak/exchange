@@ -1,4 +1,4 @@
-package com.kutay.exchange.shared;
+package com.kutay.exchange.shared.model;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.MappedSuperclass;
@@ -6,7 +6,6 @@ import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
@@ -17,7 +16,7 @@ import java.time.Instant;
 @Getter
 @Setter
 @MappedSuperclass // Tell JPA/Hibernate that this ia base class for future entities
-abstract public class AbstractBaseEntity implements Serializable {
+public abstract class AbstractBaseEntity implements Serializable {
     /*
      * Neden serialVersionUID Kullanıyoruz?
      * * 1. Java Serialization Mekanizması: Java, bir nesneyi byte dizisine çevirirken (serialize),
