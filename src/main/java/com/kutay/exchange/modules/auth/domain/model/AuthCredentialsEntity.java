@@ -1,7 +1,7 @@
 package com.kutay.exchange.modules.auth.domain.model;
 
 
-import com.kutay.exchange.shared.AbstractBaseEntity;
+import com.kutay.exchange.shared.model.AbstractBaseEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -12,7 +12,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
-import java.util.UUID;
 
 @Entity
 @Table(name = "auth_users")
