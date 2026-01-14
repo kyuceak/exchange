@@ -1,4 +1,4 @@
-package com.kutay.exchange.modules.ledger.internal.model.enums;
+package com.kutay.exchange.modules.ledger.internal.transaction.model.enums;
 
 /**
  * Status of a ledger transaction.

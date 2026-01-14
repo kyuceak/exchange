@@ -1,10 +1,10 @@
-package com.kutay.exchange.modules.ledger.api.dto;
+package com.kutay.exchange.modules.ledger.internal.transaction.model.enums;
 
 /**
  * Types of ledger entries representing different transaction categories.
  * Used by other modules when recording ledger entries.
  */
-public enum LedgerType {
+public enum TransactionType {
 
     // Funding operations
     DEPOSIT,
