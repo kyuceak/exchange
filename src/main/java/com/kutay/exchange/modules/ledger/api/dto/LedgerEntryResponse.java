@@ -11,11 +11,10 @@ import java.util.UUID;
  * Returned when querying transaction history.
  */
 public record LedgerEntryResponse(
-        Long id,
+        UUID id,
         UUID walletId,
         Asset asset,
         BigDecimal amount,
-        LedgerType type,
         String referenceId,
         String description,
         Instant createdAt

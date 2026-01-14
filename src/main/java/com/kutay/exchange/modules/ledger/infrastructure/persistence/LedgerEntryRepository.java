@@ -1,7 +1,7 @@
 package com.kutay.exchange.modules.ledger.infrastructure.persistence;
 
-import com.kutay.exchange.modules.ledger.internal.model.Entry;
-import com.kutay.exchange.modules.ledger.internal.model.enums.EntryLayer;
+import com.kutay.exchange.modules.ledger.internal.entry.model.Entry;
+import com.kutay.exchange.modules.ledger.internal.entry.model.enums.EntryLayer;
 import com.kutay.exchange.shared.model.Asset;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -17,7 +17,7 @@ import java.util.UUID;
  * Provides methods for recording and querying transaction history.
  */
 @Repository
-public interface LedgerEntryRepository extends JpaRepository<Entry, Long> {
+public interface LedgerEntryRepository extends JpaRepository<Entry, UUID> {
 
     /**
      * Find all entries for a Transaction
