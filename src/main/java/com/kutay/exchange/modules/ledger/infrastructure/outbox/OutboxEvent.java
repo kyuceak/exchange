@@ -1,10 +1,7 @@
-package com.kutay.exchange.modules.ledger.internal.outbox;
+package com.kutay.exchange.modules.ledger.infrastructure.outbox;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 import org.springframework.data.annotation.CreatedDate;
@@ -16,25 +13,29 @@ import java.util.UUID;
 
 
 @Getter
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
 @Entity
 @Table(name = "outbox_events")
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class OutboxEvent {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
+    public OutboxEvent(String aggregateId, String aggregateType, LedgerEventType eventType, Map<String, Object> payload) {
+        this.aggregateId = aggregateId;
+        this.aggregateType = aggregateType;
+        this.eventType = eventType;
+        this.payload = payload;
+    }
+
     @Column(name = "aggregate_id", nullable = false)
     private String aggregateId; // ledgerEntryId, like referenceId. events belongs to specific records like entry
 
     @Column(name = "aggregate_type", nullable = false)
-    private String aggregateType; // e.g., LedgeEntry
+    private String aggregateType; // e.g., LedgerEntry
 
-    @Enumerated(EnumType.STRING) // persist this enum as its NAME, not ordinal number
     @Column(name = "event_type", nullable = false)
-    private EventType eventType; // LedgerEntryRecorded
+    private LedgerEventType eventType; // LedgerEntryRecorded
 
 //    private String topic; // Domain models must not know infrastructure details
 
@@ -46,7 +47,7 @@ public class OutboxEvent {
     @Column(name = "created_at", nullable = false, updatable = false)
     private Instant createdAt;
 
-    @Column(name = "processed_at", updatable = false)
+    @Column(name = "processed_at")
     private Instant processedAt;
 
     @PrePersist
