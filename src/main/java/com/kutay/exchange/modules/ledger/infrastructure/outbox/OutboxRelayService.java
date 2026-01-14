@@ -1,4 +1,4 @@
-package com.kutay.exchange.modules.ledger.internal.outbox;
+package com.kutay.exchange.modules.ledger.infrastructure.outbox;
 
 import com.kutay.exchange.shared.kafka.TopicsResolver;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +20,7 @@ public class OutboxRelayService {
     private final KafkaTemplate<String, Object> kafkaTemplate;
     private final TopicsResolver topicsResolver;
 
-    @Scheduled(fixedRate = 500) // every 500ms --> Run this method automatically on a schedule
+    @Scheduled(fixedRate = 5000) // every 500ms --> Run this method automatically on a schedule
     @Transactional
     public void publishPendingEvents() {
         List<OutboxEvent> pendingEvents = outboxRepository.findByProcessedAtIsNullOrderByCreatedAtAsc();

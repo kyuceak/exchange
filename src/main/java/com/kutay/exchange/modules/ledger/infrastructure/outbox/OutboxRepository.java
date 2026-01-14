@@ -1,4 +1,4 @@
-package com.kutay.exchange.modules.ledger.internal.outbox;
+package com.kutay.exchange.modules.ledger.infrastructure.outbox;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
