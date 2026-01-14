@@ -51,9 +51,11 @@ public class Account extends AbstractBaseEntity {
     @Column(nullable = false, updatable = false)
     private String code;  // e.g., "ASSETS:BANK:USD", "LIABILITIES:USER_123:BTC" --> invariant
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false, updatable = false)
     private AccountType accountType; // asset,liability,revenue ...
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false, updatable = false)
     private AccountScope accountScope; // USER, SYSTEM...
 

@@ -1,13 +1,12 @@
-package com.kutay.exchange.modules.ledger.internal.model;
+package com.kutay.exchange.modules.ledger.internal.entry.model;
 
-import com.kutay.exchange.modules.ledger.internal.model.enums.EntryDirection;
-import com.kutay.exchange.modules.ledger.internal.model.enums.EntryLayer;
+import com.kutay.exchange.modules.ledger.internal.account.model.Account;
+import com.kutay.exchange.modules.ledger.internal.transaction.model.Transaction;
+import com.kutay.exchange.modules.ledger.internal.entry.model.enums.EntryDirection;
+import com.kutay.exchange.modules.ledger.internal.entry.model.enums.EntryLayer;
 import com.kutay.exchange.shared.model.AbstractBaseEntity;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.math.BigDecimal;
 import java.util.UUID;
@@ -20,16 +19,27 @@ import java.util.UUID;
                 @Index(name = "idx_txid_created_at", columnList = "transaction_id, created_at"),
                 @Index(name = "idx_direction", columnList = "direction"),
                 @Index(name = "idx_account_id", columnList = "account_id")})
-@AllArgsConstructor
-@NoArgsConstructor
 @Getter
-@Builder
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Entry extends AbstractBaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    // transaction_id and account_id reference must be add
+    // Internal constructor
+    protected Entry(Account account,
+                    BigDecimal amount,
+                    EntryDirection direction,
+                    EntryLayer layer,
+                    Transaction transaction) {
+        this.account = account;
+        this.amount = amount;
+        this.direction = direction;
+        this.layer = layer;
+        this.transaction = transaction;
+    }
+
+
     @ManyToOne(fetch = FetchType.LAZY)// dont load ledger directly, later implement JOIN FETCH
     @JoinColumn(name = "transaction_id",
             updatable = false,
@@ -57,6 +67,21 @@ public class Entry extends AbstractBaseEntity {
 
     @Column(nullable = false)
     private boolean settled = false;
+
+    // expose factory methods for debit and credit. (direction is not arbitrary, misuse is much harder)
+    public static Entry debit(Account account,
+                              Transaction transaction,
+                              BigDecimal amount,
+                              EntryLayer layer) {
+        return new Entry(account, amount, EntryDirection.DEBIT, layer, transaction);
+    }
+
+    public static Entry credit(Account account,
+                               Transaction transaction,
+                               BigDecimal amount,
+                               EntryLayer layer) {
+        return new Entry(account, amount, EntryDirection.CREDIT, layer, transaction);
+    }
 
     public void markSettled() {
         this.settled = true;
