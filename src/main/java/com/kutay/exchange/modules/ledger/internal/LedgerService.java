@@ -1,96 +1,82 @@
 package com.kutay.exchange.modules.ledger.internal;
 
-import com.kutay.exchange.modules.ledger.api.dto.RecordEntryRequest;
 import com.kutay.exchange.modules.ledger.infrastructure.persistence.AccountRepository;
 import com.kutay.exchange.modules.ledger.infrastructure.persistence.LedgerEntryRepository;
 import com.kutay.exchange.modules.ledger.infrastructure.persistence.TransactionRepository;
-import com.kutay.exchange.modules.ledger.internal.model.Account;
-import com.kutay.exchange.modules.ledger.internal.model.Entry;
-import com.kutay.exchange.modules.ledger.internal.model.Transaction;
-import com.kutay.exchange.modules.ledger.internal.model.enums.EntryLayer;
-import com.kutay.exchange.modules.ledger.internal.model.enums.TransactionStatus;
-import com.kutay.exchange.modules.ledger.internal.outbox.EventType;
-import com.kutay.exchange.modules.ledger.internal.outbox.OutboxEvent;
-import com.kutay.exchange.modules.ledger.internal.outbox.OutboxRepository;
+import com.kutay.exchange.modules.ledger.internal.account.model.Account;
+import com.kutay.exchange.modules.ledger.internal.entry.model.Entry;
+import com.kutay.exchange.modules.ledger.internal.entry.model.enums.EntryDirection;
+import com.kutay.exchange.modules.ledger.internal.transaction.TransactionFactory;
+import com.kutay.exchange.modules.ledger.internal.transaction.model.Transaction;
+import com.kutay.exchange.modules.ledger.web.dto.RecordTransactionRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.time.Instant;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class LedgerService {
-
     private final TransactionRepository transactionRepository;
+    private final TransactionFactory transactionFactory;
     private final LedgerEntryRepository ledgerEntryRepository;
     private final AccountRepository accountRepository;
-    private final OutboxRepository outboxRepository;
+    private final LedgerEventPublisher ledgerEventPublisher;
 
-
-    /* Functionalities
-     * CRUD accounts,
-     * record transactions, entries
-     *
-     *
-     *
-     *
+    /*
+     * High level functions
+     * 1. create Transaction
+     * 2. record deposit
+     * 3 record withdraw
      * */
 
+    // supplying all the Account IDs
+    @Transactional
+    public UUID recordGenericTransaction(RecordTransactionRequest request) {
 
-    public void recordEntry(RecordEntryRequest request) {
-        // 1. check idempotency
+        // create transaction
+        // add ledger Entries (DEBIT,CREDIT) to transaction
 
-        if (transactionRepository.existsByReferenceId(request.referenceId())) {
-            return;
+        // Idempotency Check or create transaction
+        Transaction transaction = transactionFactory.createOrFindIfExists(request.referenceId(),
+                request.description(),
+                request.transactionType());
+
+        // fetch batch Accounts and make sure them exist and then cache
+
+        Set<UUID> accountIds = request.entries()
+                .stream()
+                .map(RecordTransactionRequest.EntryLine::accountId)
+                .collect(Collectors.toSet());
+
+        Map<UUID, Account> accounts = accountRepository.findAllById(accountIds)
+                .stream()
+                .collect(Collectors.toMap(Account::getId, account -> account));
+
+        if (accounts.size() != accountIds.size()) {
+            throw new IllegalStateException("One or more accounts not funds");
         }
 
-        // 2. find or create account
+        // build the entries in memory
 
-        Account account = accountRepository
-                .findByWalletIdAndAsset(request.walletId(), request.asset())
-                .orElseThrow(() -> new IllegalStateException("Account not found"));
+        List<Entry> entries = new ArrayList<>();
+        for (RecordTransactionRequest.EntryLine line : request.entries()) {
+            Account account = accounts.get(line.accountId());
+            entries.add(line.direction() == EntryDirection.DEBIT
+                    ? Entry.debit(account, transaction, line.amount(), line.layer())
+                    : Entry.credit(account, transaction, line.amount(), line.layer()));
+        }
 
+        // persist the entries
 
-        // 3. create transaction
+        List<Entry> saved = ledgerEntryRepository.saveAll(entries);
 
-        Transaction transaction = Transaction.builder()
-                .referenceId(request.referenceId())
-                .description(request.description())
-                .status(TransactionStatus.POSTED)
-                .postedAt(Instant.now())
-                .build();
-        transactionRepository.save(transaction);
-
-        // 4. create entry
-
-        Entry entry = Entry.builder()
-                .transaction(transaction)
-                .account(account)
-                .direction(request.entryDirection())
-                .amount(request.amount())
-                .layer(request.entryLayer())
-                .settled(false)
-                .build();
-        ledgerEntryRepository.save(entry);
-
-        // 5. emit event
-
-        OutboxEvent outboxEvent = OutboxEvent.builder()
-                .aggregateId(entry.getId().toString())
-                .aggregateType("Entry")
-                .eventType(EventType.LEDGER_ENTRY_CREATED)
-                .payload(Map.of(
-                        "entryId", entry.getId().toString(),
-                        "walletId", request.walletId().toString(),
-                        "asset", request.asset().name(),
-                        "amount", request.amount().toString(),
-                        "direction", request.entryDirection().name(),
-                        "layer", request.entryLayer().name()
-
-                ))
-                .build();
-        outboxRepository.save(outboxEvent);
+        for (Entry entry : saved) {
+            ledgerEventPublisher.publishIfUserAccount(transaction, entry);
+        }
+        return transaction.getId();
     }
 
 
