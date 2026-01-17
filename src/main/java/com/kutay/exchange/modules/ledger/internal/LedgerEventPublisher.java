@@ -2,8 +2,8 @@ package com.kutay.exchange.modules.ledger.internal;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kutay.exchange.modules.ledger.infrastructure.events.LedgerEntryRecorded;
-import com.kutay.exchange.modules.ledger.infrastructure.outbox.AggregateType;
-import com.kutay.exchange.modules.ledger.infrastructure.outbox.LedgerEventType;
+import com.kutay.exchange.modules.ledger.infrastructure.outbox.enums.AggregateType;
+import com.kutay.exchange.modules.ledger.infrastructure.outbox.enums.LedgerEventType;
 import com.kutay.exchange.modules.ledger.infrastructure.outbox.OutboxEvent;
 import com.kutay.exchange.modules.ledger.infrastructure.outbox.OutboxRepository;
 import com.kutay.exchange.modules.ledger.internal.account.model.Account;

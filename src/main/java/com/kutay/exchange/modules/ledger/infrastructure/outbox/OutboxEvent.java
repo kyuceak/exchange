@@ -1,5 +1,7 @@
 package com.kutay.exchange.modules.ledger.infrastructure.outbox;
 
+import com.kutay.exchange.modules.ledger.infrastructure.outbox.enums.EventStatus;
+import com.kutay.exchange.modules.ledger.infrastructure.outbox.enums.LedgerEventType;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.JdbcTypeCode;
@@ -26,6 +28,7 @@ public class OutboxEvent {
         this.aggregateType = aggregateType;
         this.eventType = eventType;
         this.payload = payload;
+        this.eventStatus = EventStatus.PENDING;
     }
 
     @Column(name = "aggregate_id", nullable = false)
@@ -36,6 +39,13 @@ public class OutboxEvent {
 
     @Column(name = "event_type", nullable = false)
     private LedgerEventType eventType; // LedgerEntryRecorded
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "event_status", nullable = false)
+    private EventStatus eventStatus;
+
+    @Column(name = "retry_count", nullable = false)
+    private int retryCount = 0;
 
 //    private String topic; // Domain models must not know infrastructure details
 
@@ -50,6 +60,9 @@ public class OutboxEvent {
     @Column(name = "processed_at")
     private Instant processedAt;
 
+    @Column(name = "sending_at")
+    private Instant sendingAt;
+
     @PrePersist
     private void onCreate() {
         if (this.createdAt == null) {
@@ -57,7 +70,17 @@ public class OutboxEvent {
         }
     }
 
+
     public void markProcessed() {
         this.processedAt = Instant.now();
+    }
+
+    // below methods are good for synchronous flows, but can not be used in cross-thread flows
+    public void markSending() {
+        this.eventStatus = EventStatus.SENDING;
+    }
+
+    public void markSent() {
+        this.eventStatus = EventStatus.SENT;
     }
 }
