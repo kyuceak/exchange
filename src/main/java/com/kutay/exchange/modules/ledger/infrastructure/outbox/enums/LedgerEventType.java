@@ -1,4 +1,4 @@
-package com.kutay.exchange.modules.ledger.infrastructure.outbox;
+package com.kutay.exchange.modules.ledger.infrastructure.outbox.enums;
 
 public enum LedgerEventType {
     LEDGER_ENTRY_CREATED("LedgerEntryCreated"),

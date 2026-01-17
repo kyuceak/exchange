@@ -1,4 +1,4 @@
-package com.kutay.exchange.modules.ledger.infrastructure.outbox;
+package com.kutay.exchange.modules.ledger.infrastructure.outbox.enums;
 
 /**
  * Types of aggregates that can produce domain events.
