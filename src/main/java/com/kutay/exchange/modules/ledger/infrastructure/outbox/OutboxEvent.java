@@ -16,7 +16,10 @@ import java.util.UUID;
 
 @Getter
 @Entity
-@Table(name = "outbox_events")
+@Table(name = "outbox_events",
+        indexes = {
+                @Index(name = "idx_status_sending_at", columnList = "event_status, sending_at")
+        })
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class OutboxEvent {
     @Id

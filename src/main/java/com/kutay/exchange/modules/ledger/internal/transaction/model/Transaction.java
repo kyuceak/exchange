@@ -9,7 +9,6 @@ import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 
 import java.time.Instant;
-import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -37,7 +36,7 @@ public class Transaction extends AbstractBaseEntity {
     public Transaction(String referenceId,
                        String description,
                        TransactionType transactionType) {
-        this(referenceId, description, transactionType, "");
+        this(referenceId, description, transactionType, "{}");
     }
 
     public Transaction(
