@@ -1,4 +1,4 @@
-package com.kutay.exchange.modules.Wallet.domain.model.enums;
+package com.kutay.exchange.modules.wallet.domain.model.enums;
 
 public enum WalletStatus {
     ACTIVE,
