@@ -1,6 +1,6 @@
-package com.kutay.exchange.modules.Wallet.web.DTO.queries;
+package com.kutay.exchange.modules.wallet.web.dto.queries;
 
-import com.kutay.exchange.modules.Wallet.domain.model.enums.Asset;
+import com.kutay.exchange.shared.model.Asset;
 
 import java.math.BigDecimal;
 

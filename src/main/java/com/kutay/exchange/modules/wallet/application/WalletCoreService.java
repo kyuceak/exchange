@@ -2,12 +2,11 @@ package com.kutay.exchange.modules.wallet.application;
 
 import com.kutay.exchange.modules.ledger.api.LedgerFacade;
 import com.kutay.exchange.modules.ledger.api.dto.LedgerAccountSpec;
-import com.kutay.exchange.modules.ledger.internal.LedgerService;
 import com.kutay.exchange.modules.wallet.api.WalletAccountSpec;
 import com.kutay.exchange.modules.wallet.domain.model.WalletAsset;
 import com.kutay.exchange.modules.wallet.domain.service.WalletAssetService;
 import com.kutay.exchange.modules.wallet.domain.service.WalletService;
-import com.kutay.exchange.modules.wallet.web.DTO.WalletResponse;
+import com.kutay.exchange.modules.wallet.web.dto.WalletResponse;
 import com.kutay.exchange.modules.wallet.mapper.WalletMapper;
 import com.kutay.exchange.modules.wallet.domain.model.Wallet;
 import com.kutay.exchange.modules.wallet.domain.model.enums.WalletStatus;

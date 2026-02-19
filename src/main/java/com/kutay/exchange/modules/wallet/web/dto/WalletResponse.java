@@ -1,7 +1,7 @@
-package com.kutay.exchange.modules.Wallet.web.DTO;
+package com.kutay.exchange.modules.wallet.web.dto;
 
-import com.kutay.exchange.modules.Wallet.domain.model.enums.WalletStatus;
-import com.kutay.exchange.modules.Wallet.domain.model.enums.WalletType;
+import com.kutay.exchange.modules.wallet.domain.model.enums.WalletStatus;
+import com.kutay.exchange.modules.wallet.domain.model.enums.WalletType;
 
 import java.time.Instant;
 import java.util.UUID;

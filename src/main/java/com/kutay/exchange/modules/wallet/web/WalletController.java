@@ -1,4 +1,4 @@
-package com.kutay.exchange.modules.Wallet.web;
+package com.kutay.exchange.modules.wallet.web;
 
 import org.springframework.web.bind.annotation.RestController;
 

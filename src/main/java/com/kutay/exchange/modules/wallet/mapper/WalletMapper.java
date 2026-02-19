@@ -1,13 +1,13 @@
-package com.kutay.exchange.modules.Wallet.mapper;
+package com.kutay.exchange.modules.wallet.mapper;
 
-import com.kutay.exchange.modules.Wallet.web.DTO.WalletRequest;
-import com.kutay.exchange.modules.Wallet.web.DTO.WalletResponse;
-import com.kutay.exchange.modules.Wallet.domain.model.Wallet;
+import com.kutay.exchange.modules.wallet.api.WalletAccountSpec;
+import com.kutay.exchange.modules.wallet.web.dto.WalletResponse;
+import com.kutay.exchange.modules.wallet.domain.model.Wallet;
 import com.kutay.exchange.shared.Mapper.BaseMapper;
 
-public class WalletMapper extends BaseMapper<Wallet, WalletRequest, WalletResponse> {
+public class WalletMapper extends BaseMapper<Wallet, WalletAccountSpec, WalletResponse> {
     @Override
-    public Wallet convertToEntity(WalletRequest dto, Object... args) {
+    public Wallet convertToEntity(WalletAccountSpec dto, Object... args) {
         return null;
     }
 
