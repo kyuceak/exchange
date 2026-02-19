@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -26,7 +27,7 @@ public class CustomerFacadeImpl implements CustomerFacade {
     }
 
     @Override
-    public CustomerResponse readUser(Long customerId) {
+    public CustomerResponse readUser(UUID customerId) {
         return customerService.readUser(customerId);
     }
 
@@ -36,7 +37,7 @@ public class CustomerFacadeImpl implements CustomerFacade {
     }
 
     @Override
-    public boolean existsById(Long id) {
+    public boolean existsById(UUID id) {
         return customerService.existsById(id);
     }
 }
