@@ -33,7 +33,12 @@ public class Account extends AbstractBaseEntity {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    public Account(UUID walletId, Asset asset, AccountType accountType, AccountScope scope, SystemAccountPurpose purpose, String metadata) {
+    public Account(UUID walletId,
+                   Asset asset,
+                   AccountType accountType,
+                   AccountScope scope,
+                   SystemAccountPurpose purpose,
+                   String metadata) {
         this.walletId = walletId;
         this.asset = asset;
         this.accountType = accountType;
@@ -62,8 +67,8 @@ public class Account extends AbstractBaseEntity {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, updatable = false)
     private Asset asset;
-
     @JdbcTypeCode(SqlTypes.JSON)
     @Column(name = "metadata", columnDefinition = "jsonb")
     private String metadata; //  Map<String,Object> --> Object has not serializable guarantee
+
 }

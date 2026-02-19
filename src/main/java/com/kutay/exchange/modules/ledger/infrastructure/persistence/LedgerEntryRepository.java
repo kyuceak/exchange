@@ -1,7 +1,7 @@
 package com.kutay.exchange.modules.ledger.infrastructure.persistence;
 
 import com.kutay.exchange.modules.ledger.internal.entry.model.Entry;
-import com.kutay.exchange.modules.ledger.internal.entry.model.enums.EntryLayer;
+import com.kutay.exchange.shared.enums.EntryLayer;
 import com.kutay.exchange.shared.model.Asset;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

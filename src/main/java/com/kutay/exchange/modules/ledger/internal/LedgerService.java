@@ -5,11 +5,12 @@ import com.kutay.exchange.modules.ledger.infrastructure.persistence.LedgerEntryR
 import com.kutay.exchange.modules.ledger.infrastructure.persistence.TransactionRepository;
 import com.kutay.exchange.modules.ledger.internal.account.model.Account;
 import com.kutay.exchange.modules.ledger.internal.entry.model.Entry;
-import com.kutay.exchange.modules.ledger.internal.entry.model.enums.EntryDirection;
+import com.kutay.exchange.shared.enums.EntryDirection;
 import com.kutay.exchange.modules.ledger.internal.transaction.TransactionFactory;
 import com.kutay.exchange.modules.ledger.internal.transaction.model.Transaction;
 import com.kutay.exchange.modules.ledger.web.dto.RecordTransactionRequest;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,6 +19,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class LedgerService {
     private final TransactionRepository transactionRepository;
     private final TransactionFactory transactionFactory;
@@ -56,7 +58,8 @@ public class LedgerService {
                 .collect(Collectors.toMap(Account::getId, account -> account));
 
         if (accounts.size() != accountIds.size()) {
-            throw new IllegalStateException("One or more accounts not funds");
+            log.error("AccountId={}, accounts={}", accountIds, accounts);
+            throw new IllegalStateException("One or more accounts not found");
         }
 
         // build the entries in memory

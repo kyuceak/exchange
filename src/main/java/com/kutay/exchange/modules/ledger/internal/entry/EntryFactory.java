@@ -4,7 +4,7 @@ import com.kutay.exchange.modules.ledger.infrastructure.persistence.LedgerEntryR
 import com.kutay.exchange.modules.ledger.internal.LedgerEventPublisher;
 import com.kutay.exchange.modules.ledger.internal.account.model.Account;
 import com.kutay.exchange.modules.ledger.internal.entry.model.Entry;
-import com.kutay.exchange.modules.ledger.internal.entry.model.enums.EntryLayer;
+import com.kutay.exchange.shared.enums.EntryLayer;
 import com.kutay.exchange.modules.ledger.internal.transaction.model.Transaction;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
