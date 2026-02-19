@@ -1,7 +1,7 @@
 package com.kutay.exchange.modules.ledger.web.dto;
 
-import com.kutay.exchange.modules.ledger.internal.entry.model.enums.EntryDirection;
-import com.kutay.exchange.modules.ledger.internal.entry.model.enums.EntryLayer;
+import com.kutay.exchange.shared.enums.EntryDirection;
+import com.kutay.exchange.shared.enums.EntryLayer;
 import com.kutay.exchange.modules.ledger.internal.transaction.model.enums.TransactionType;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;

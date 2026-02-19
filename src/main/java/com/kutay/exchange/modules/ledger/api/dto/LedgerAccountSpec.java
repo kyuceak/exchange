@@ -10,6 +10,6 @@ without saying how it will be done.
 
 public record LedgerAccountSpec(UUID walletId, Asset asset, String metadata) {
     public LedgerAccountSpec(UUID walletId, Asset asset) {
-        this(walletId, asset, "");
+        this(walletId, asset, "{}");
     }
 }

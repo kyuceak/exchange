@@ -33,7 +33,7 @@ public class OutboxFlushScheduler {
 
         if (!successEvents.isEmpty()) {
             outboxRepository.markAsSent(new HashSet<>(successEvents), Instant.now());
-            log.info("Marked {} events as SENT", successEvents.size());
+            log.info("Marked {} events as SENT and its {}", successEvents.size(), successEvents);
         }
     }
 

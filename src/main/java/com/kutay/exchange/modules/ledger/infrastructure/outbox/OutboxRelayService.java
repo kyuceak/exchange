@@ -19,7 +19,6 @@ import java.util.stream.Collectors;
 @Slf4j
 // reads events from the outbox table and publishes them to the message broker
 public class OutboxRelayService {
-
     private final OutboxRepository outboxRepository;
     private final KafkaTemplate<String, Object> kafkaTemplate;
     private final TopicsResolver topicsResolver;

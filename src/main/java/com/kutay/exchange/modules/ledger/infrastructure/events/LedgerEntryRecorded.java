@@ -1,7 +1,7 @@
 package com.kutay.exchange.modules.ledger.infrastructure.events;
 
-import com.kutay.exchange.modules.ledger.internal.entry.model.enums.EntryDirection;
-import com.kutay.exchange.modules.ledger.internal.entry.model.enums.EntryLayer;
+import com.kutay.exchange.shared.enums.EntryDirection;
+import com.kutay.exchange.shared.enums.EntryLayer;
 import com.kutay.exchange.shared.model.Asset;
 
 import java.math.BigDecimal;
