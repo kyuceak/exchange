@@ -12,21 +12,21 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
+import java.util.UUID;
 
 @Entity
 @Table(name = "auth_users")
 @Getter
 @Setter
-@SequenceGenerator(name = "credentials_id_generator",
-        sequenceName = "credentials_id_seq"
-)
+//@SequenceGenerator(name = "credentials_id_generator",
+//        sequenceName = "credentials_id_seq"
+//)
 public class AuthCredentialsEntity extends AbstractBaseEntity implements UserDetails {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE,
-            generator = "credentials_id_generator")
+    @GeneratedValue(strategy = GenerationType.UUID)
     @Column(updatable = false, nullable = false)
-    private Long id;
+    private UUID id;
 
     @Column(nullable = false, unique = true)
     private String email;
@@ -35,7 +35,7 @@ public class AuthCredentialsEntity extends AbstractBaseEntity implements UserDet
     private String password;
 
     @Column()
-    private Long customerId;
+    private UUID customerId;
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)

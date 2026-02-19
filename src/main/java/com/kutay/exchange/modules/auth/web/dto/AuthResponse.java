@@ -2,8 +2,10 @@ package com.kutay.exchange.modules.auth.web.dto;
 
 import com.kutay.exchange.modules.auth.domain.model.Role;
 
+import java.util.UUID;
+
 public record AuthResponse(
-        Long id,
+        UUID id,
         String email,
         boolean emailVerified,
         String firstName,

@@ -1,4 +1,4 @@
-package com.kutay.exchange.config.security.JWT;
+package com.kutay.exchange.config.security.jwt;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.FilterChain;
@@ -29,6 +29,12 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
             return;
         }
 
+        // for testing purposes, remove it later
+        if (!request.getServletPath().startsWith("/api/")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
         ObjectMapper objectMapper = new ObjectMapper();
         LoginRequest loginRequest = objectMapper.readValue(request.getInputStream(), LoginRequest.class);
 
@@ -36,7 +42,6 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
                 new UsernamePasswordAuthenticationToken(loginRequest.email(), loginRequest.password());
 
         Authentication authResult = authenticationManager.authenticate(authToken);
-        System.out.println(authResult);
 
         if (authResult.isAuthenticated()) {
             String token = jwtUtil.generateToken(authResult.getName(), 15);

@@ -1,6 +1,6 @@
 package com.kutay.exchange.config;
 
-import com.kutay.exchange.config.security.JWT.*;
+import com.kutay.exchange.config.security.jwt.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -52,6 +52,7 @@ public class SecurityConfig {
 
         http.authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/auth/register").permitAll()
+                        .requestMatchers("/test/**").permitAll()
                         .requestMatchers("/api/customers").hasRole("ADMIN")
                         .anyRequest().authenticated())
                 .sessionManagement(session -> session
