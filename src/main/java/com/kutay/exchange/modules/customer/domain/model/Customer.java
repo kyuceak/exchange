@@ -1,11 +1,11 @@
 package com.kutay.exchange.modules.customer.domain.model;
 
-import com.kutay.exchange.shared.AbstractBaseEntity;
+import com.kutay.exchange.shared.model.AbstractBaseEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Entity
 @Table(name = "customers")
@@ -13,15 +13,8 @@ import java.time.LocalDateTime;
 @Setter
 public class Customer extends AbstractBaseEntity {
     @Id
-    @GeneratedValue(
-            strategy = GenerationType.SEQUENCE,
-            generator = "user_id_generator"
-    )
-    @SequenceGenerator(
-            name = "user_id_generator",
-            sequenceName = "user_id_seq"
-    )
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
 
     @Column(nullable = false)
     private String firstName;
@@ -34,13 +27,4 @@ public class Customer extends AbstractBaseEntity {
 
     @Column(nullable = false)
     private String address;
-
-    // by default, it creates a new table which contains userid-walletid mapoing
-    // by default its Lazy loading, which means child is not fetched when getting parent.
-    // if we don't want to create a new table we have to use @JoinColumn
-    // in OneToMany scenarios @JoinColumn is preferred. its the faster way of accessing data.
-    // new table creation is used for ManyToMany scenarios.
-
-//    @OneToMany(cascade = CascadeType.ALL)
-//    private List<WalletEntity> wallets = new ArrayList<>();
 }

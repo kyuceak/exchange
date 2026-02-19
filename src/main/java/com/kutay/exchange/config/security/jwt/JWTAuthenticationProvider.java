@@ -1,4 +1,4 @@
-package com.kutay.exchange.config.security.JWT;
+package com.kutay.exchange.config.security.jwt;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -13,13 +13,13 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 @RequiredArgsConstructor
 public class JWTAuthenticationProvider implements AuthenticationProvider {
 
-    private final JWTUtil jwtUtil;
+    private final com.kutay.exchange.config.security.jwt.JWTUtil jwtUtil;
     private final UserDetailsService userDetailsService;
 
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
 
-        String token = ((JWTAuthenticationToken) authentication).getToken();
+        String token = ((com.kutay.exchange.config.security.jwt.JWTAuthenticationToken) authentication).getToken();
 
         String email = jwtUtil.validateTokenAndExtractEmail(token);
 
@@ -33,7 +33,7 @@ public class JWTAuthenticationProvider implements AuthenticationProvider {
 
     @Override
     public boolean supports(Class<?> authentication) {
-        return JWTAuthenticationToken.class.isAssignableFrom(authentication);
+        return com.kutay.exchange.config.security.jwt.JWTAuthenticationToken.class.isAssignableFrom(authentication);
     }
 }
 

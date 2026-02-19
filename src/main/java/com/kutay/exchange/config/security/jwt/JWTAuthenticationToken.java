@@ -1,4 +1,4 @@
-package com.kutay.exchange.config.security.JWT;
+package com.kutay.exchange.config.security.jwt;
 
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 

@@ -1,4 +1,4 @@
-package com.kutay.exchange.config.security.JWT;
+package com.kutay.exchange.config.security.jwt;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -38,7 +38,6 @@ public class JWTRefreshFilter extends OncePerRequestFilter {
         JWTAuthenticationToken authenticationToken = new JWTAuthenticationToken(refreshToken);
 
         Authentication authResult = authenticationManager.authenticate(authenticationToken);
-        System.out.println("burasi geldi: " + authResult.getName());
         if (authResult.isAuthenticated()) {
             String newToken = jwtUtil.generateToken(authResult.getName(), 15);
             response.setHeader("Authorization", "Bearer " + newToken);

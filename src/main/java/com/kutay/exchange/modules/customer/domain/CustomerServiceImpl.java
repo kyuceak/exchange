@@ -10,11 +10,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
 public class CustomerServiceImpl {
-
     private final CustomerRepository customerRepository;
     private final CustomerMapper customerMapper = new CustomerMapper();
 
@@ -27,8 +27,7 @@ public class CustomerServiceImpl {
         return customerMapper.convertToDTO(db_customer);
     }
 
-
-    public CustomerResponse readUser(Long userId) {
+    public CustomerResponse readUser(UUID userId) {
         Optional<Customer> result = customerRepository.findById(userId);
 
         Customer user = null;
@@ -43,11 +42,13 @@ public class CustomerServiceImpl {
         return customerMapper.convertToDTO(user);
     }
 
-
     public List<CustomerResponse> readUsers() {
         List<Customer> users = customerRepository.findAll();
-        System.out.println(users);
 
         return customerMapper.convertToDtoList(users);
+    }
+
+    public boolean existsById(UUID id) {
+        return customerRepository.existsById(id);
     }
 }
