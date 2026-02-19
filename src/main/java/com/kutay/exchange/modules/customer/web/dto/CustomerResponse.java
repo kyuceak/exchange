@@ -1,6 +1,8 @@
 package com.kutay.exchange.modules.customer.web.dto;
 
-public record CustomerResponse(Long id,
+import java.util.UUID;
+
+public record CustomerResponse(UUID id,
                                String firstName,
                                String lastName,
                                String phoneNumber,

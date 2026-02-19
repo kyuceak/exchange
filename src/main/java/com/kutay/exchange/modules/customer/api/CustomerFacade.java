@@ -13,4 +13,6 @@ public interface CustomerFacade {
     CustomerResponse readUser(Long customerId);
 
     List<CustomerResponse> readUsers();
+
+    boolean existsById(Long id);
 }

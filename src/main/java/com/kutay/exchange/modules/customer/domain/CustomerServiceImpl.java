@@ -14,7 +14,6 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class CustomerServiceImpl {
-
     private final CustomerRepository customerRepository;
     private final CustomerMapper customerMapper = new CustomerMapper();
 
@@ -26,7 +25,6 @@ public class CustomerServiceImpl {
 
         return customerMapper.convertToDTO(db_customer);
     }
-
 
     public CustomerResponse readUser(Long userId) {
         Optional<Customer> result = customerRepository.findById(userId);
@@ -43,11 +41,13 @@ public class CustomerServiceImpl {
         return customerMapper.convertToDTO(user);
     }
 
-
     public List<CustomerResponse> readUsers() {
         List<Customer> users = customerRepository.findAll();
-        System.out.println(users);
 
         return customerMapper.convertToDtoList(users);
+    }
+
+    public boolean existsById(Long id) {
+        return customerRepository.existsById(id);
     }
 }

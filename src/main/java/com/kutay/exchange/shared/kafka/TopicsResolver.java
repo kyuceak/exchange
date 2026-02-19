@@ -1,6 +1,6 @@
 package com.kutay.exchange.shared.kafka;
 
-import com.kutay.exchange.modules.ledger.infrastructure.outbox.LedgerEventType;
+import com.kutay.exchange.modules.ledger.infrastructure.outbox.enums.LedgerEventType;
 import org.springframework.stereotype.Component;
 
 @Component
