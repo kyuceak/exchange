@@ -1,5 +1,6 @@
 package com.kutay.exchange.modules.ledger.internal;
 
+import com.kutay.exchange.modules.ledger.exception.LedgerImbalanceException;
 import com.kutay.exchange.modules.ledger.infrastructure.persistence.AccountRepository;
 import com.kutay.exchange.modules.ledger.infrastructure.persistence.LedgerEntryRepository;
 import com.kutay.exchange.modules.ledger.infrastructure.persistence.TransactionRepository;
@@ -14,6 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -63,13 +65,24 @@ public class LedgerService {
         }
 
         // build the entries in memory
-
         List<Entry> entries = new ArrayList<>();
+        BigDecimal debitAmount = BigDecimal.ZERO;
+        BigDecimal creditAmount = BigDecimal.ZERO;
         for (RecordTransactionRequest.EntryLine line : request.entries()) {
             Account account = accounts.get(line.accountId());
-            entries.add(line.direction() == EntryDirection.DEBIT
-                    ? Entry.debit(account, transaction, line.amount(), line.layer())
-                    : Entry.credit(account, transaction, line.amount(), line.layer()));
+
+            if (line.direction() == EntryDirection.DEBIT) {
+                debitAmount = debitAmount.add(line.amount());
+                entries.add(Entry.debit(account, transaction, line.amount(), line.layer()));
+            } else {
+                creditAmount = creditAmount.add(line.amount());
+                entries.add(Entry.credit(account, transaction, line.amount(), line.layer()));
+            }
+        }
+
+        if (debitAmount.compareTo(creditAmount) != 0) {
+            log.error("Debit and credit amounts are not equal, debit={}, credit={}", debitAmount, creditAmount);
+            throw new LedgerImbalanceException(debitAmount, creditAmount);
         }
 
         // persist the entries
