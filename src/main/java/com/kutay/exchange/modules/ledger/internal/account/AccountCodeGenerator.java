@@ -2,7 +2,7 @@ package com.kutay.exchange.modules.ledger.internal.account;
 
 import com.kutay.exchange.modules.ledger.internal.account.model.enums.AccountType;
 import com.kutay.exchange.modules.ledger.internal.account.model.enums.SystemAccountPurpose;
-import com.kutay.exchange.shared.model.Asset;
+import com.kutay.exchange.shared.contracts.Asset;
 
 import java.util.Objects;
 import java.util.UUID;

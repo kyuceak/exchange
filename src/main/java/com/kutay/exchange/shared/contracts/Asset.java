@@ -1,4 +1,4 @@
-package com.kutay.exchange.shared.model;
+package com.kutay.exchange.shared.contracts;
 
 /**
  * Supported cryptocurrency and fiat assets.

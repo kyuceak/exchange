@@ -3,7 +3,7 @@ package com.kutay.exchange.modules.ledger.infrastructure.bootstrap;
 import com.kutay.exchange.modules.ledger.internal.account.LedgerAccountFactory;
 import com.kutay.exchange.modules.ledger.internal.account.model.enums.AccountType;
 import com.kutay.exchange.modules.ledger.internal.account.model.enums.SystemAccountPurpose;
-import com.kutay.exchange.shared.model.Asset;
+import com.kutay.exchange.shared.contracts.Asset;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;

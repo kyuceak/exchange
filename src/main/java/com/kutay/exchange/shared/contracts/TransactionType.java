@@ -1,11 +1,10 @@
-package com.kutay.exchange.modules.ledger.internal.transaction.model.enums;
+package com.kutay.exchange.shared.contracts;
 
 /**
  * Types of ledger entries representing different transaction categories.
  * Used by other modules when recording ledger entries.
  */
 public enum TransactionType {
-
     // Funding operations
     DEPOSIT,
     WITHDRAWAL,

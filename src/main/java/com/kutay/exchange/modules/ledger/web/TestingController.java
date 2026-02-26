@@ -1,7 +1,7 @@
 package com.kutay.exchange.modules.ledger.web;
 
 import com.kutay.exchange.modules.ledger.api.LedgerFacade;
-import com.kutay.exchange.modules.ledger.web.dto.RecordTransactionRequest;
+import com.kutay.exchange.modules.ledger.api.dto.InternalTransaction;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,7 +15,7 @@ public class TestingController {
     private final LedgerFacade ledgerFacade;
 
     @PostMapping("/transaction/record")
-    public UUID recordTransaction(@RequestBody RecordTransactionRequest request) {
+    public UUID recordTransaction(@RequestBody InternalTransaction request) {
         return ledgerFacade.recordGenericTransaction(request);
     }
 

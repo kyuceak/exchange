@@ -2,8 +2,8 @@ package com.kutay.exchange.modules.ledger.internal.entry.model;
 
 import com.kutay.exchange.modules.ledger.internal.account.model.Account;
 import com.kutay.exchange.modules.ledger.internal.transaction.model.Transaction;
-import com.kutay.exchange.shared.enums.EntryDirection;
-import com.kutay.exchange.shared.enums.EntryLayer;
+import com.kutay.exchange.shared.contracts.EntryDirection;
+import com.kutay.exchange.shared.contracts.EntryLayer;
 import com.kutay.exchange.shared.model.AbstractBaseEntity;
 import jakarta.persistence.*;
 import lombok.*;

@@ -1,7 +1,7 @@
 package com.kutay.exchange.modules.ledger.web;
 
 import com.kutay.exchange.modules.ledger.internal.LedgerService;
-import com.kutay.exchange.modules.ledger.web.dto.RecordTransactionRequest;
+import com.kutay.exchange.modules.ledger.api.dto.InternalTransaction;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,7 +25,7 @@ public class LedgerController {
     private final LedgerService ledgerService;
 
     @PostMapping("/transactions")
-    public UUID recordEntry(@RequestBody RecordTransactionRequest request) {
+    public UUID recordEntry(@RequestBody InternalTransaction request) {
         return ledgerService.recordGenericTransaction(request);
     }
 }

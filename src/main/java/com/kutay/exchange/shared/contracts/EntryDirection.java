@@ -1,4 +1,4 @@
-package com.kutay.exchange.shared.enums;
+package com.kutay.exchange.shared.contracts;
 
 public enum EntryDirection {
     DEBIT,

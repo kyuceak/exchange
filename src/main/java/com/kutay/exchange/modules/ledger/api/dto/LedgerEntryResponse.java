@@ -1,6 +1,6 @@
 package com.kutay.exchange.modules.ledger.api.dto;
 
-import com.kutay.exchange.shared.model.Asset;
+import com.kutay.exchange.shared.contracts.Asset;
 
 import java.math.BigDecimal;
 import java.time.Instant;
