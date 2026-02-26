@@ -1,8 +1,8 @@
-package com.kutay.exchange.modules.ledger.web.dto;
+package com.kutay.exchange.modules.ledger.api.dto;
 
-import com.kutay.exchange.shared.enums.EntryDirection;
-import com.kutay.exchange.shared.enums.EntryLayer;
-import com.kutay.exchange.modules.ledger.internal.transaction.model.enums.TransactionType;
+import com.kutay.exchange.shared.contracts.EntryDirection;
+import com.kutay.exchange.shared.contracts.EntryLayer;
+import com.kutay.exchange.shared.contracts.TransactionType;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
@@ -12,7 +12,7 @@ import java.util.UUID;
 
 
 // A ledger transaction has invariants that must be enforced before any business-logic, persistence happens.
-public record RecordTransactionRequest(
+public record InternalTransaction(
         @NotNull String referenceId,
         @NotNull TransactionType transactionType,
         String description,
@@ -31,7 +31,7 @@ public record RecordTransactionRequest(
     // DTO canonical constructor
     // validation to ensure debits = credits
     // do invariant validation
-    public RecordTransactionRequest {
+    public InternalTransaction {
         // do validation here --> after jackson deserialized and before entering in to controller
 
         if (entries == null || entries.size() < 2) {

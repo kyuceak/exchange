@@ -2,11 +2,14 @@ package com.kutay.exchange.modules.ledger.internal;
 
 import com.kutay.exchange.modules.ledger.api.LedgerFacade;
 import com.kutay.exchange.modules.ledger.api.dto.LedgerAccountSpec;
+import com.kutay.exchange.modules.ledger.api.dto.LedgerIntent;
+import com.kutay.exchange.modules.ledger.domain.LedgerIntentResolver;
 import com.kutay.exchange.modules.ledger.internal.account.LedgerAccountFactory;
-import com.kutay.exchange.modules.ledger.web.dto.RecordTransactionRequest;
+import com.kutay.exchange.modules.ledger.api.dto.InternalTransaction;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -18,10 +21,23 @@ import java.util.UUID;
 public class LedgerFacadeImpl implements LedgerFacade {
     private final LedgerService ledgerService;
     private final LedgerAccountFactory ledgerAccountFactory;
+    private final LedgerIntentResolver intentResolver;
 
     @Override
-    public UUID recordGenericTransaction(RecordTransactionRequest request) {
+    public UUID recordGenericTransaction(InternalTransaction request) {
         return ledgerService.recordGenericTransaction(request);
+    }
+
+    @Override
+    public UUID recordGenericTransactionIntent(LedgerIntent intent) {
+        List<InternalTransaction.EntryLine> entries = intentResolver.resolve(intent);
+
+        InternalTransaction transaction = new InternalTransaction(intent.referenceId(),
+                intent.transactionType(),
+                null,
+                entries);
+
+        return ledgerService.recordGenericTransaction(transaction);
     }
 
     @Override

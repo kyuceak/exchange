@@ -6,7 +6,7 @@ import com.kutay.exchange.modules.ledger.internal.account.model.enums.AccountSco
 import com.kutay.exchange.modules.ledger.internal.account.model.enums.AccountType;
 import com.kutay.exchange.modules.ledger.api.dto.LedgerAccountSpec;
 import com.kutay.exchange.modules.ledger.internal.account.model.enums.SystemAccountPurpose;
-import com.kutay.exchange.shared.model.Asset;
+import com.kutay.exchange.shared.contracts.Asset;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Component;

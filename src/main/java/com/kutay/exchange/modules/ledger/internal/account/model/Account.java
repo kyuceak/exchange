@@ -2,10 +2,11 @@ package com.kutay.exchange.modules.ledger.internal.account.model;
 
 import com.kutay.exchange.modules.ledger.internal.account.AccountCodeGenerator;
 import com.kutay.exchange.modules.ledger.internal.account.model.enums.AccountScope;
+import com.kutay.exchange.modules.ledger.internal.account.model.enums.AccountState;
 import com.kutay.exchange.modules.ledger.internal.account.model.enums.AccountType;
 import com.kutay.exchange.modules.ledger.internal.account.model.enums.SystemAccountPurpose;
 import com.kutay.exchange.shared.model.AbstractBaseEntity;
-import com.kutay.exchange.shared.model.Asset;
+import com.kutay.exchange.shared.contracts.Asset;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.JdbcTypeCode;
@@ -19,7 +20,7 @@ import java.util.UUID;
                 @UniqueConstraint(
                         name = "uk_account_code",
                         columnNames = {"code"}
-                ),
+                ), // later think about + walletId and Asset is unique
         },
         indexes = {
                 @Index(name = "idx_account_wallet_id", columnList = "walletId"),
@@ -49,6 +50,10 @@ public class Account extends AbstractBaseEntity {
         };
         this.metadata = metadata;
     }
+
+    @Enumerated(EnumType.STRING)
+    @Column(updatable = false, nullable = false)
+    private AccountState state;
 
     @Column(name = "wallet_id", nullable = false, updatable = false)
     private UUID walletId; // identity reference

@@ -1,8 +1,8 @@
 package com.kutay.exchange.modules.ledger.infrastructure.events;
 
-import com.kutay.exchange.shared.enums.EntryDirection;
-import com.kutay.exchange.shared.enums.EntryLayer;
-import com.kutay.exchange.shared.model.Asset;
+import com.kutay.exchange.shared.contracts.EntryDirection;
+import com.kutay.exchange.shared.contracts.EntryLayer;
+import com.kutay.exchange.shared.contracts.Asset;
 
 import java.math.BigDecimal;
 import java.time.Instant;
