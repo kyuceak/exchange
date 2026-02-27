@@ -1,16 +1,15 @@
 package com.kutay.exchange.modules.payment.domain.models;
 
-import com.kutay.exchange.modules.payment.domain.models.enums.Direction;
+import com.kutay.exchange.modules.payment.domain.models.enums.FiatState;
+import com.kutay.exchange.shared.contracts.Direction;
 import com.kutay.exchange.modules.payment.domain.models.enums.PaymentMethod;
-import com.kutay.exchange.shared.model.AbstractBaseEntity;
-import com.kutay.exchange.shared.model.Asset;
+import com.kutay.exchange.shared.contracts.Asset;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
-import java.util.Objects;
 import java.util.UUID;
 
 @Entity
@@ -18,23 +17,21 @@ import java.util.UUID;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class FiatPayment extends Payment {
-    @Id
-    private UUID id;
-
-    //    @MapsId // child entity lifecycle is identical to the parents. child is not optional
-//    @OneToOne(fetch = FetchType.LAZY, optional = false)
-//    @JoinColumn(name = "payment_id", nullable = false)
-//    private Payment payment;
-
     private String iban;
 
     @Column(nullable = false, updatable = false)
     private String bankRef;
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private FiatState state;
+
     private String swift;
 
+    @Column(nullable = false)
     private String senderName;
 
+    @Column(nullable = false)
     private String receiverAccount;
 
     private FiatPayment(UUID walletId,
@@ -128,5 +125,30 @@ public class FiatPayment extends Payment {
                 receiverAccount,
                 senderName,
                 swift);
+    }
+
+    public void sendToProvider() {
+        if (state != FiatState.CREATED) {
+            throw new IllegalStateException("Fiat payment already started, id: " + getId());
+        }
+        this.state = FiatState.PENDING_PROVIDER;
+    }
+
+    public void authorize() {
+        if (state != FiatState.PENDING_PROVIDER) {
+            throw new IllegalStateException("Cannot authorize from state: " + state + " id: " + getId());
+        }
+        this.state = FiatState.AUTHORIZED;
+    }
+
+    public void settle() {
+        if (state != FiatState.AUTHORIZED) {
+            throw new IllegalStateException("Cannot settle from state: " + state + " id: " + getId());
+        }
+        this.state = FiatState.SETTLED;
+    }
+
+    public void decline() {
+        this.state = FiatState.DECLINED;
     }
 }
