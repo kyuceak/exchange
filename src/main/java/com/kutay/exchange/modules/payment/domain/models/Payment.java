@@ -1,10 +1,9 @@
 package com.kutay.exchange.modules.payment.domain.models;
 
-import com.kutay.exchange.modules.payment.domain.models.enums.Direction;
+import com.kutay.exchange.shared.contracts.Direction;
 import com.kutay.exchange.modules.payment.domain.models.enums.PaymentMethod;
-import com.kutay.exchange.modules.payment.domain.models.enums.PaymentStatus;
 import com.kutay.exchange.shared.model.AbstractBaseEntity;
-import com.kutay.exchange.shared.model.Asset;
+import com.kutay.exchange.shared.contracts.Asset;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -49,10 +48,6 @@ public abstract class Payment extends AbstractBaseEntity {
     @Column(nullable = false, updatable = false)
     private BigDecimal amount;
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private PaymentStatus paymentStatus;
-
     @Column(unique = true, nullable = false, updatable = false)
     private String referenceId; // idempotency key
 
@@ -72,7 +67,6 @@ public abstract class Payment extends AbstractBaseEntity {
         this.asset = asset;
         this.paymentMethod = paymentMethod;
         this.amount = amount;
-        this.paymentStatus = PaymentStatus.NOT_STARTED;
         this.referenceId = UUID.randomUUID().toString();
     }
 
