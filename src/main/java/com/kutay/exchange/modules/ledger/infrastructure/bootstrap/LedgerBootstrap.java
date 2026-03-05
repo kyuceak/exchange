@@ -31,6 +31,10 @@ public class LedgerBootstrap {
             // 4. Adjustments
             ledgerAccountFactory.createSystemAccount(asset, AccountType.EXPENSE, SystemAccountPurpose.ADJUSTMENTS);
 
+            // 5. PENDING PAYMENTS
+
+            ledgerAccountFactory.createSystemAccount(asset, AccountType.LIABILITY, SystemAccountPurpose.PENDING_PAYMENTS);
+
         }
     }
 

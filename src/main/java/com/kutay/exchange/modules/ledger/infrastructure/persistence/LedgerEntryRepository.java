@@ -59,17 +59,27 @@ public interface LedgerEntryRepository extends JpaRepository<Entry, UUID> {
 
     // Calculate balance from entries ( source of truth )
     @Query("""
-            SELECT COALESCE(
-                       SUM(CASE WHEN e.direction = 'CREDIT' THEN e.amount ELSE -e.amount END),0
-                       )
+            SELECT COALESCE(SUM(e.signedAmount), 0)
             FROM Entry e
             JOIN e.account a
             WHERE a.walletId = :walletId
             AND a.asset = :asset
             AND e.layer = :layer
-            AND e.settled = true
             """)
     BigDecimal calculateBalance(@Param("walletId") UUID walletId,
                                 @Param("asset") Asset asset,
                                 @Param("layer") EntryLayer layer);
+
+
+    @Query("""
+            SELECT COALESCE(SUM(e.signedAmount), 0)
+            FROM Entry e
+            JOIN Account a
+            WHERE a.id = :accountId
+            AND a.asset = :asset
+            AND e.layer = :layer
+            """)
+    BigDecimal calculateBalanceByAccountId(@Param("accountId") UUID accountId,
+                                           @Param("asset") Asset asset,
+                                           @Param("layer") EntryLayer layer);
 }
