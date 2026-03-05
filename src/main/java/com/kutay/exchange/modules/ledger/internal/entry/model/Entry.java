@@ -29,11 +29,13 @@ public class Entry extends AbstractBaseEntity {
     // Internal constructor
     protected Entry(Account account,
                     BigDecimal amount,
+                    BigDecimal signedAmount,
                     EntryDirection direction,
                     EntryLayer layer,
                     Transaction transaction) {
         this.account = account;
         this.amount = amount;
+        this.signedAmount = signedAmount;
         this.direction = direction;
         this.layer = layer;
         this.transaction = transaction;
@@ -58,32 +60,31 @@ public class Entry extends AbstractBaseEntity {
     @Column(nullable = false, updatable = false)
     private EntryDirection direction;
 
-    @Column(nullable = false, updatable = false, precision = 19, scale = 8)
+    @Column(nullable = false, updatable = false)
     private BigDecimal amount;
+
+    @Column(nullable = false, updatable = false)
+    private BigDecimal signedAmount;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, updatable = false)
     private EntryLayer layer;
 
-    @Column(nullable = false)
-    private boolean settled = false;
-
+    // buralara calculate signed amount yaz
     // expose factory methods for debit and credit. (direction is not arbitrary, misuse is much harder)
     public static Entry debit(Account account,
                               Transaction transaction,
                               BigDecimal amount,
                               EntryLayer layer) {
-        return new Entry(account, amount, EntryDirection.DEBIT, layer, transaction);
+        BigDecimal signed = account.getAccountType().calculateSignedAmount(amount, EntryDirection.DEBIT);
+        return new Entry(account, amount, signed, EntryDirection.DEBIT, layer, transaction);
     }
 
     public static Entry credit(Account account,
                                Transaction transaction,
                                BigDecimal amount,
                                EntryLayer layer) {
-        return new Entry(account, amount, EntryDirection.CREDIT, layer, transaction);
-    }
-
-    public void markSettled() {
-        this.settled = true;
+        BigDecimal signed = account.getAccountType().calculateSignedAmount(amount, EntryDirection.CREDIT);
+        return new Entry(account, amount, signed, EntryDirection.CREDIT, layer, transaction);
     }
 }

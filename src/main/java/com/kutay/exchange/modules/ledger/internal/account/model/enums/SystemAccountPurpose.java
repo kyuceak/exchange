@@ -4,5 +4,6 @@ public enum SystemAccountPurpose {
     CRYPTO_HOLDINGS,
     TRADING_FEES,
     WITHDRAWAL_FEES,
-    ADJUSTMENTS
+    ADJUSTMENTS,
+    PENDING_PAYMENTS
 }

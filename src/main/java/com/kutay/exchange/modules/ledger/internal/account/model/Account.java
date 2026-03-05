@@ -12,6 +12,7 @@ import lombok.*;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 
+import java.math.BigDecimal;
 import java.util.UUID;
 
 @Entity
@@ -25,7 +26,8 @@ import java.util.UUID;
         indexes = {
                 @Index(name = "idx_account_wallet_id", columnList = "walletId"),
                 @Index(name = "idx_account_asset", columnList = "asset"),
-                @Index(name = "idx_account_code", columnList = "code")
+                @Index(name = "idx_account_code", columnList = "code"),
+                @Index(name = "idx_account_balance", columnList = "balance")
         })
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -49,7 +51,11 @@ public class Account extends AbstractBaseEntity {
             case USER -> AccountCodeGenerator.generateUser(accountType, asset, walletId);
         };
         this.metadata = metadata;
+        this.balance = BigDecimal.ZERO;
     }
+
+    @Column(nullable = false)
+    private BigDecimal balance;
 
     @Enumerated(EnumType.STRING)
     @Column(updatable = false, nullable = false)
@@ -72,6 +78,7 @@ public class Account extends AbstractBaseEntity {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, updatable = false)
     private Asset asset;
+
     @JdbcTypeCode(SqlTypes.JSON)
     @Column(name = "metadata", columnDefinition = "jsonb")
     private String metadata; //  Map<String,Object> --> Object has not serializable guarantee
