@@ -57,6 +57,9 @@ public class Account extends AbstractBaseEntity {
     @Column(nullable = false)
     private BigDecimal balance;
 
+    @Version
+    private Long version;
+
     @Enumerated(EnumType.STRING)
     @Column(updatable = false, nullable = false)
     private AccountState state;
@@ -83,4 +86,7 @@ public class Account extends AbstractBaseEntity {
     @Column(name = "metadata", columnDefinition = "jsonb")
     private String metadata; //  Map<String,Object> --> Object has not serializable guarantee
 
+    public void addToBalance(BigDecimal signedAmount) {
+        balance = balance.add(signedAmount);
+    }
 }

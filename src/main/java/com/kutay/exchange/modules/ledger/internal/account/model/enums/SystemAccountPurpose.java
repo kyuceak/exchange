@@ -4,6 +4,6 @@ public enum SystemAccountPurpose {
     CRYPTO_HOLDINGS,
     TRADING_FEES,
     WITHDRAWAL_FEES,
-    ADJUSTMENTS,
+    ADJUSTMENTS, // cost center --> adjustments for user balance corrections in user's favor
     PENDING_PAYMENTS
 }
