@@ -69,7 +69,6 @@ public class LedgerService {
 
         for (InternalTransaction.EntryLine line : request.entries()) {
             Account account = accounts.get(line.accountId());
-
             if (line.direction() == EntryDirection.DEBIT) {
                 entries.add(Entry.debit(account, transaction, line.amount(), line.layer()));
             } else {
@@ -82,6 +81,8 @@ public class LedgerService {
         List<Entry> saved = ledgerEntryRepository.saveAll(entries);
 
         for (Entry entry : saved) {
+            Account account = entry.getAccount();
+            account.addToBalance(entry.getSignedAmount());
             ledgerEventPublisher.publishIfUserAccount(transaction, entry);
         }
         return transaction.getId();

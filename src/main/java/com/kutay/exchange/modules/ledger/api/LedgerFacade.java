@@ -16,9 +16,13 @@ import java.util.UUID;
  */
 @NamedInterface
 public interface LedgerFacade {
-    UUID recordGenericTransaction(InternalTransaction request);
-
-    UUID recordGenericTransactionIntent(LedgerIntent request);
+    UUID recordGenericTransactionIntent(LedgerIntent intent);
 
     UUID createUserAccount(LedgerAccountSpec spec);
+
+    void reserve(LedgerIntent intent); // lock funds
+
+    void release(LedgerIntent intent); // rollback/cancel funds
+
+    void settle(LedgerIntent intent); // succesful payment apply the changes
 }

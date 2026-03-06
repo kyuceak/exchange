@@ -8,12 +8,13 @@ public enum AccountType {
     ASSET, // Exchange treasury
     LIABILITY, // User balances ( bizim borçlarimiz )
     REVENUE,
+    EQUITY,
     EXPENSE;
 
     public BigDecimal calculateSignedAmount(BigDecimal amount, EntryDirection direction) {
         boolean isNaturalDirection = switch (this) {
             case ASSET, EXPENSE -> direction == EntryDirection.DEBIT;
-            case LIABILITY, REVENUE -> direction == EntryDirection.CREDIT;
+            case LIABILITY, REVENUE, EQUITY -> direction == EntryDirection.CREDIT;
         };
         return isNaturalDirection ? amount : amount.negate();
     }

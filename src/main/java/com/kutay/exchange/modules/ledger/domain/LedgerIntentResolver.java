@@ -32,7 +32,61 @@ public class LedgerIntentResolver {
             case TRANSFER_OUT -> null;
             case REFUND -> null;
             case CORRECTION -> null;
+            case RESERVE -> buildReserveEntries(intent);
+            case RELEASE -> buildReleaseEntries(intent);
+            case SETTLEMENT -> buildSettlementWithdrawal(intent);
         };
+    }
+
+    private List<InternalTransaction.EntryLine> buildReserveEntries(LedgerIntent intent) {
+        UUID userAccountId = accountRepository
+                .findByWalletIdAndAsset(intent.walletId(), intent.asset())
+                .orElseThrow(() -> new EntityNotFoundException(
+                        "Account not found for walletId=" + intent.walletId() + ", asset=" + intent.asset())).getId();
+
+        UUID systemAccountId = resolveSystemAccountId(intent.asset(), SystemAccountPurpose.PENDING_PAYMENTS);
+
+        return List.of(new InternalTransaction.EntryLine(userAccountId, intent.amount(), EntryDirection.DEBIT, EntryLayer.AVAILABLE),
+                new InternalTransaction.EntryLine(systemAccountId, intent.amount(), EntryDirection.CREDIT, EntryLayer.AVAILABLE)
+        );
+    }
+
+    private List<InternalTransaction.EntryLine> buildReleaseEntries(LedgerIntent intent) {
+        UUID userAccountId = accountRepository
+                .findByWalletIdAndAsset(intent.walletId(), intent.asset())
+                .orElseThrow(() -> new EntityNotFoundException(
+                        "Account not found for walletId=" + intent.walletId() + ", asset=" + intent.asset())).getId();
+        UUID systemAccountId = resolveSystemAccountId(intent.asset(), SystemAccountPurpose.PENDING_PAYMENTS);
+
+        return List.of(
+                new
+                        InternalTransaction.EntryLine(userAccountId,
+                        intent.amount(),
+                        EntryDirection.CREDIT, EntryLayer.AVAILABLE),
+                new InternalTransaction.EntryLine(systemAccountId,
+                        intent.amount(),
+                        EntryDirection.DEBIT, EntryLayer.AVAILABLE));
+    }
+
+    private List<InternalTransaction.EntryLine>
+    buildSettlementWithdrawal(LedgerIntent intent) {
+        UUID systemPendingId =
+                resolveSystemAccountId(intent.asset(),
+                        SystemAccountPurpose.PENDING_PAYMENTS);
+        UUID systemHoldingsId =
+                resolveSystemAccountId(intent.asset(),
+                        SystemAccountPurpose.CRYPTO_HOLDINGS);
+
+        return List.of(
+                new
+                        InternalTransaction.EntryLine(systemPendingId,
+                        intent.amount(),
+                        EntryDirection.DEBIT, EntryLayer.AVAILABLE),
+                new
+                        InternalTransaction.EntryLine(systemHoldingsId,
+                        intent.amount(),
+                        EntryDirection.CREDIT, EntryLayer.AVAILABLE)
+        );
     }
 
     private List<InternalTransaction.EntryLine> buildDepositEntries(LedgerIntent intent) {
@@ -43,12 +97,11 @@ public class LedgerIntentResolver {
                                 intent.walletId() + ", asset=" + intent.asset()))
                 .getId();
         UUID systemAccountId =
-                resolveSystemAccountId(intent.asset());
+                resolveSystemAccountId(intent.asset(), SystemAccountPurpose.CRYPTO_HOLDINGS);
         return List.of(new InternalTransaction.EntryLine(systemAccountId,
                         intent.amount(), EntryDirection.DEBIT, EntryLayer.AVAILABLE),
                 new InternalTransaction.EntryLine(userAccountId,
                         intent.amount(), EntryDirection.CREDIT, EntryLayer.AVAILABLE));
-
     }
 
     private List<InternalTransaction.EntryLine> buildWithdrawalEntries(LedgerIntent intent) {
@@ -56,8 +109,7 @@ public class LedgerIntentResolver {
                 findByWalletIdAndAsset(intent.walletId(), intent.asset())
                 .orElseThrow(() -> new EntityNotFoundException("Account not found for walletId=" +
                         intent.walletId() + ", asset=" + intent.asset())).getId();
-        UUID systemAccountId = resolveSystemAccountId(intent.asset());
-
+        UUID systemAccountId = resolveSystemAccountId(intent.asset(), SystemAccountPurpose.CRYPTO_HOLDINGS);
 
         return List.of(new InternalTransaction.EntryLine(userAccountId,
                         intent.amount(), EntryDirection.DEBIT,
@@ -68,11 +120,18 @@ public class LedgerIntentResolver {
         );
     }
 
-    private UUID resolveSystemAccountId(Asset asset) {
+    private UUID resolveSystemAccountId(Asset asset, SystemAccountPurpose accountPurpose) {
+        AccountType accType = switch (accountPurpose) {
+            case CRYPTO_HOLDINGS -> AccountType.ASSET;
+            case TRADING_FEES, WITHDRAWAL_FEES -> AccountType.REVENUE;
+            case ADJUSTMENTS -> AccountType.EXPENSE;
+            case PENDING_PAYMENTS -> AccountType.LIABILITY;
+        };
+
         String code =
                 AccountCodeGenerator.generateSystem(
-                        AccountType.ASSET, asset,
-                        SystemAccountPurpose.CRYPTO_HOLDINGS
+                        accType, asset,
+                        accountPurpose
                 );
         return accountRepository.findByCode(code)
                 .orElseThrow(() -> new
