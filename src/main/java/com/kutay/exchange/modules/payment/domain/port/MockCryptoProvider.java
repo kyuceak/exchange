@@ -1,6 +1,7 @@
 package com.kutay.exchange.modules.payment.domain.port;
 
 import com.kutay.exchange.modules.payment.domain.models.Payment;
+import com.kutay.exchange.modules.payment.domain.models.enums.PaymentMethod;
 import com.kutay.exchange.modules.payment.domain.port.dto.PaymentProviderResult;
 import org.springframework.stereotype.Component;
 
@@ -17,5 +18,10 @@ public class MockCryptoProvider implements PaymentProvider {
                 UUID.randomUUID().toString(), "")
                 : new PaymentProviderResult(false,
                 UUID.randomUUID().toString(), "Simulated blockchain timeout");
+    }
+
+    @Override
+    public PaymentMethod supportedMethod() {
+        return PaymentMethod.CRYPTO;
     }
 }

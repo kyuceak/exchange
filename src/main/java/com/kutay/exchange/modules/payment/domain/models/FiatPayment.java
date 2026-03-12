@@ -13,7 +13,10 @@ import java.math.BigDecimal;
 import java.util.UUID;
 
 @Entity
-@Table(uniqueConstraints = @UniqueConstraint(name = "uk_fiat_bank_ref", columnNames = {"bank_ref"}))
+@Table(
+        indexes = {@Index(name = "idx_bank_ref", columnList = "bank_ref")},
+        uniqueConstraints = @UniqueConstraint(name = "uk_fiat_bank_ref", columnNames = {"bank_ref"})
+)
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class FiatPayment extends Payment {
@@ -50,6 +53,7 @@ public class FiatPayment extends Payment {
         this.receiverAccount = receiverAccount;
         this.senderName = senderName;
         this.swift = swift;
+        this.state = FiatState.CREATED;
     }
 
 
