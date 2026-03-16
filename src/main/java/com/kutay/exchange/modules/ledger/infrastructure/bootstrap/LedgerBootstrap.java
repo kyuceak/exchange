@@ -1,6 +1,7 @@
 package com.kutay.exchange.modules.ledger.infrastructure.bootstrap;
 
 import com.kutay.exchange.modules.ledger.internal.account.LedgerAccountFactory;
+import com.kutay.exchange.modules.ledger.internal.account.model.enums.AccountState;
 import com.kutay.exchange.modules.ledger.internal.account.model.enums.AccountType;
 import com.kutay.exchange.modules.ledger.internal.account.model.enums.SystemAccountPurpose;
 import com.kutay.exchange.shared.contracts.Asset;
@@ -11,7 +12,6 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 public class LedgerBootstrap {
-
     private final LedgerAccountFactory ledgerAccountFactory;
 
     @PostConstruct
@@ -20,20 +20,19 @@ public class LedgerBootstrap {
 
             // create system test accounts for each purpose
             // 1. CRYPTO HOLDINGS
-            ledgerAccountFactory.createSystemAccount(asset, AccountType.ASSET, SystemAccountPurpose.CRYPTO_HOLDINGS);
+            for (AccountState state : AccountState.values()) {
+                ledgerAccountFactory.createSystemLedger(asset, AccountType.ASSET, SystemAccountPurpose.CRYPTO_HOLDINGS, state);
+            }
+
 
             // 2. TRADING FEES (REVENUE)
-            ledgerAccountFactory.createSystemAccount(asset, AccountType.REVENUE, SystemAccountPurpose.TRADING_FEES);
+            ledgerAccountFactory.createSystemLedger(asset, AccountType.REVENUE, SystemAccountPurpose.TRADING_FEES, AccountState.SETTLED);
 
             // 3. Withdrawal Fees (REVENUE)
-            ledgerAccountFactory.createSystemAccount(asset, AccountType.REVENUE, SystemAccountPurpose.WITHDRAWAL_FEES);
+            ledgerAccountFactory.createSystemLedger(asset, AccountType.REVENUE, SystemAccountPurpose.WITHDRAWAL_FEES, AccountState.SETTLED);
 
             // 4. Adjustments
-            ledgerAccountFactory.createSystemAccount(asset, AccountType.EXPENSE, SystemAccountPurpose.ADJUSTMENTS);
-
-            // 5. PENDING PAYMENTS
-
-            ledgerAccountFactory.createSystemAccount(asset, AccountType.LIABILITY, SystemAccountPurpose.PENDING_PAYMENTS);
+            ledgerAccountFactory.createSystemLedger(asset, AccountType.EXPENSE, SystemAccountPurpose.ADJUSTMENTS, AccountState.SETTLED);
 
         }
     }
