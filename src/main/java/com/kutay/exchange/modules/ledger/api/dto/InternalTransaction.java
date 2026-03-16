@@ -1,8 +1,7 @@
 package com.kutay.exchange.modules.ledger.api.dto;
 
 import com.kutay.exchange.shared.contracts.EntryDirection;
-import com.kutay.exchange.shared.contracts.EntryLayer;
-import com.kutay.exchange.shared.contracts.TransactionType;
+import com.kutay.exchange.modules.ledger.internal.transaction.model.enums.TransactionType;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
@@ -24,8 +23,7 @@ public record InternalTransaction(
      * */
     public record EntryLine(@NotNull UUID accountId,
                             @NotNull BigDecimal amount,
-                            @NotNull EntryDirection direction,
-                            @NotNull EntryLayer layer) {
+                            @NotNull EntryDirection direction) {
     }
 
     // DTO canonical constructor
