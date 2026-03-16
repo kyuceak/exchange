@@ -11,7 +11,7 @@ import com.kutay.exchange.modules.wallet.mapper.WalletMapper;
 import com.kutay.exchange.modules.wallet.domain.model.Wallet;
 import com.kutay.exchange.modules.wallet.domain.model.enums.WalletStatus;
 import com.kutay.exchange.modules.wallet.infrastructure.persistence.WalletRepository;
-import com.kutay.exchange.shared.model.Asset;
+import com.kutay.exchange.shared.contracts.Asset;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -43,15 +43,13 @@ public class WalletCoreService {
     // create walletAsset ( for future added assets)
 
     @Transactional
-    public UUID createWallet(WalletAccountSpec spec) {
+    public void createWallet(WalletAccountSpec spec) {
 
         Wallet wallet = walletService.createWalletIfNotExists(spec);
 
         bootstrapDefaultAssets(wallet);
 
         log.info("Created wallet with default assets: id={}, customerId={}, type ={}", wallet.getId(), wallet.getCustomerId(), wallet.getWalletType());
-
-        return wallet.getId();
     }
 
     private void bootstrapDefaultAssets(Wallet wallet) {

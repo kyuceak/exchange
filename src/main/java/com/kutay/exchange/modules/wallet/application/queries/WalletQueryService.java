@@ -1,6 +1,6 @@
 package com.kutay.exchange.modules.wallet.application.queries;
 
-import com.kutay.exchange.shared.model.Asset;
+import com.kutay.exchange.shared.contracts.Asset;
 import com.kutay.exchange.modules.wallet.web.dto.WalletResponse;
 import com.kutay.exchange.modules.wallet.web.dto.queries.BalanceInfo;
 
