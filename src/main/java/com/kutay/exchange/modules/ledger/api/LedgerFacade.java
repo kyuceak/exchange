@@ -1,7 +1,6 @@
 package com.kutay.exchange.modules.ledger.api;
 
 import com.kutay.exchange.modules.ledger.api.dto.LedgerAccountSpec;
-import com.kutay.exchange.modules.ledger.api.dto.InternalTransaction;
 import com.kutay.exchange.modules.ledger.api.dto.LedgerIntent;
 import org.springframework.modulith.NamedInterface;
 
@@ -18,7 +17,7 @@ import java.util.UUID;
 public interface LedgerFacade {
     UUID recordGenericTransactionIntent(LedgerIntent intent);
 
-    UUID createUserAccount(LedgerAccountSpec spec);
+    void createUserAccount(LedgerAccountSpec spec);
 
     void reserve(LedgerIntent intent); // lock funds
 
