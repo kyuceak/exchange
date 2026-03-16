@@ -2,7 +2,7 @@ package com.kutay.exchange.modules.wallet.application.queries;
 
 import com.kutay.exchange.modules.wallet.domain.model.Wallet;
 import com.kutay.exchange.modules.wallet.domain.model.WalletAsset;
-import com.kutay.exchange.shared.model.Asset;
+import com.kutay.exchange.shared.contracts.Asset;
 import com.kutay.exchange.modules.wallet.infrastructure.persistence.WalletAssetRepository;
 import com.kutay.exchange.modules.wallet.infrastructure.persistence.WalletRepository;
 import com.kutay.exchange.modules.wallet.mapper.WalletMapper;
@@ -15,11 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * Implementation of {@link WalletQueryService} for read-model access.
@@ -34,6 +30,10 @@ public class WalletQueryServiceImpl implements WalletQueryService {
     private final WalletAssetRepository walletAssetRepository;
     private final WalletMapper walletMapper = new WalletMapper();
 
+    /*
+     * value --> the name of the cache
+     * key --> tell how the key will be constructed in SpEL
+     * */
     @Override
     @Cacheable(value = "walletBalance", key = "#walletId + ':' + #asset.name()")
     public Optional<BalanceInfo> getBalance(UUID walletId, Asset asset) {
@@ -54,7 +54,7 @@ public class WalletQueryServiceImpl implements WalletQueryService {
         Wallet wallet = walletRepository.findByIdWithAssets(walletId)
                 .orElseThrow(() -> new EntityNotFoundException("Wallet not found: " + walletId));
 
-        Map<Asset, BalanceInfo> balances = new HashMap<>();
+        Map<Asset, BalanceInfo> balances = new EnumMap<>(Asset.class);
         for (WalletAsset walletAsset : wallet.getAssets()) {
             balances.put(walletAsset.getAsset(), toBalanceInfo(walletAsset));
         }
