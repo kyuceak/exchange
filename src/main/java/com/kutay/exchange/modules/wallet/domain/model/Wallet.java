@@ -78,4 +78,10 @@ public class Wallet extends AbstractBaseEntity {
         }
         walletStatus = WalletStatus.ACTIVE;
     }
+
+    public void requireActive() {
+        if (walletStatus != WalletStatus.ACTIVE) {
+            throw new IllegalStateException("Wallet is not active.");
+        }
+    }
 }

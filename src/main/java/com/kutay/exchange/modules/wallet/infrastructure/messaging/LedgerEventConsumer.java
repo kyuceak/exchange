@@ -1,6 +1,6 @@
 package com.kutay.exchange.modules.wallet.infrastructure.messaging;
 
-import com.kutay.exchange.modules.wallet.application.commands.LedgerEntryEvent;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kutay.exchange.modules.wallet.application.commands.WalletProjectionUpdater;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,6 +15,7 @@ import java.util.Map;
 @Slf4j
 public class LedgerEventConsumer {
     private final WalletProjectionUpdater projectionUpdater;
+    private final ObjectMapper objectMapper;
 
     /*
      * @KafkaListener
@@ -38,7 +39,7 @@ public class LedgerEventConsumer {
                 consumerRecord.key(), consumerRecord.partition());
 
         try {
-            LedgerEntryEvent event = LedgerEntryEvent.fromPayload(consumerRecord.value());
+            LedgerTransactionEvent event = LedgerTransactionEvent.fromPayload(consumerRecord.value(), objectMapper);
             projectionUpdater.applyLedgerEntry(event);
         } catch (Exception e) {
             log.error("Failed to process Ledger event: key={}, error={}", consumerRecord.key(), e.getMessage());

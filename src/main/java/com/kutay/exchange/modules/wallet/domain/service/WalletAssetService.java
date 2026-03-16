@@ -2,7 +2,7 @@ package com.kutay.exchange.modules.wallet.domain.service;
 
 import com.kutay.exchange.modules.wallet.domain.model.Wallet;
 import com.kutay.exchange.modules.wallet.domain.model.WalletAsset;
-import com.kutay.exchange.shared.model.Asset;
+import com.kutay.exchange.shared.contracts.Asset;
 import com.kutay.exchange.modules.wallet.infrastructure.persistence.WalletAssetRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -35,5 +35,4 @@ public class WalletAssetService {
                     }
                 });
     }
-
 }
