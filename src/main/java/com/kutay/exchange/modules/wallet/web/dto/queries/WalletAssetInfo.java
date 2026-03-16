@@ -1,6 +1,6 @@
 package com.kutay.exchange.modules.wallet.web.dto.queries;
 
-import com.kutay.exchange.shared.model.Asset;
+import com.kutay.exchange.shared.contracts.Asset;
 
 import java.math.BigDecimal;
 
