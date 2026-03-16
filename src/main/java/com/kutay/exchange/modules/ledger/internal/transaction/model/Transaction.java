@@ -1,6 +1,6 @@
 package com.kutay.exchange.modules.ledger.internal.transaction.model;
 
-import com.kutay.exchange.shared.contracts.TransactionType;
+import com.kutay.exchange.modules.ledger.internal.transaction.model.enums.TransactionType;
 import com.kutay.exchange.modules.ledger.internal.transaction.model.enums.TransactionStatus;
 import com.kutay.exchange.shared.model.AbstractBaseEntity;
 import jakarta.persistence.*;

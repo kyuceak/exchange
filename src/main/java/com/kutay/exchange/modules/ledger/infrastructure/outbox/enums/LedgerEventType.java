@@ -2,7 +2,7 @@ package com.kutay.exchange.modules.ledger.infrastructure.outbox.enums;
 
 public enum LedgerEventType {
     LEDGER_ENTRY_CREATED("LedgerEntryCreated"),
-    LEDGER_ENTRY_SETTLED("LedgerEntryCreated"),
+    LEDGER_ENTRY_SETTLED("LedgerEntrySettled"),
     WALLET_BALANCE_UPDATED("WalletBalanceUpdated");
 
     private final String externalName;

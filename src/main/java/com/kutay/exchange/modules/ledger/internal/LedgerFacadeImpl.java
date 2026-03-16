@@ -6,13 +6,10 @@ import com.kutay.exchange.modules.ledger.api.dto.LedgerIntent;
 import com.kutay.exchange.modules.ledger.domain.LedgerIntentResolver;
 import com.kutay.exchange.modules.ledger.infrastructure.persistence.AccountRepository;
 import com.kutay.exchange.modules.ledger.infrastructure.persistence.LedgerEntryRepository;
-import com.kutay.exchange.modules.ledger.internal.account.AccountCodeGenerator;
 import com.kutay.exchange.modules.ledger.internal.account.LedgerAccountFactory;
 import com.kutay.exchange.modules.ledger.api.dto.InternalTransaction;
 import com.kutay.exchange.modules.ledger.internal.account.model.Account;
-import com.kutay.exchange.modules.ledger.internal.account.model.enums.AccountType;
-import com.kutay.exchange.modules.ledger.internal.account.model.enums.SystemAccountPurpose;
-import com.kutay.exchange.shared.contracts.EntryLayer;
+import com.kutay.exchange.modules.ledger.internal.account.model.enums.AccountState;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -50,8 +47,8 @@ public class LedgerFacadeImpl implements LedgerFacade {
     }
 
     @Override
-    public UUID createUserAccount(LedgerAccountSpec spec) {
-        return ledgerAccountFactory.createUserAccount(spec);
+    public void createUserAccount(LedgerAccountSpec spec) {
+        ledgerAccountFactory.createUserLedger(spec);
     }
 
     @Override
@@ -59,7 +56,7 @@ public class LedgerFacadeImpl implements LedgerFacade {
     public void reserve(LedgerIntent intent) {
         BigDecimal available = ledgerEntryRepository
                 .calculateBalance(intent.walletId(),
-                        intent.asset(), EntryLayer.AVAILABLE);
+                        intent.asset());
 
         if (available.compareTo(intent.amount()) < 0) {
             throw new IllegalStateException
@@ -72,8 +69,11 @@ public class LedgerFacadeImpl implements LedgerFacade {
     @Override
     @Transactional
     public void release(LedgerIntent intent) {
-        String code = AccountCodeGenerator.generateSystem(AccountType.LIABILITY, intent.asset(), SystemAccountPurpose.PENDING_PAYMENTS);
-        Account pendingAccount = accountRepository.findByCode(code).orElseThrow(() -> new EntityNotFoundException("such account does not exist"));
+        Account pendingAccount = accountRepository
+                .findByWalletIdAndAssetAndState(intent.walletId(), intent.asset(), AccountState.PENDING_DEBIT)
+                .orElseThrow(() ->
+                        new EntityNotFoundException("account not found with walletId: " + intent.walletId()
+                                + " asset: " + intent.asset()));
 
         if (pendingAccount.getBalance().compareTo(intent.amount()) < 0) {
             throw new IllegalStateException("No reserved funds to release");

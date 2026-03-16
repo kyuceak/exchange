@@ -3,7 +3,6 @@ package com.kutay.exchange.modules.ledger.internal.entry.model;
 import com.kutay.exchange.modules.ledger.internal.account.model.Account;
 import com.kutay.exchange.modules.ledger.internal.transaction.model.Transaction;
 import com.kutay.exchange.shared.contracts.EntryDirection;
-import com.kutay.exchange.shared.contracts.EntryLayer;
 import com.kutay.exchange.shared.model.AbstractBaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
@@ -31,13 +30,11 @@ public class Entry extends AbstractBaseEntity {
                     BigDecimal amount,
                     BigDecimal signedAmount,
                     EntryDirection direction,
-                    EntryLayer layer,
                     Transaction transaction) {
         this.account = account;
         this.amount = amount;
         this.signedAmount = signedAmount;
         this.direction = direction;
-        this.layer = layer;
         this.transaction = transaction;
     }
 
@@ -66,25 +63,19 @@ public class Entry extends AbstractBaseEntity {
     @Column(nullable = false, updatable = false)
     private BigDecimal signedAmount;
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false, updatable = false)
-    private EntryLayer layer;
-
     // buralara calculate signed amount yaz
     // expose factory methods for debit and credit. (direction is not arbitrary, misuse is much harder)
     public static Entry debit(Account account,
                               Transaction transaction,
-                              BigDecimal amount,
-                              EntryLayer layer) {
+                              BigDecimal amount) {
         BigDecimal signed = account.getAccountType().calculateSignedAmount(amount, EntryDirection.DEBIT);
-        return new Entry(account, amount, signed, EntryDirection.DEBIT, layer, transaction);
+        return new Entry(account, amount, signed, EntryDirection.DEBIT, transaction);
     }
 
     public static Entry credit(Account account,
                                Transaction transaction,
-                               BigDecimal amount,
-                               EntryLayer layer) {
+                               BigDecimal amount) {
         BigDecimal signed = account.getAccountType().calculateSignedAmount(amount, EntryDirection.CREDIT);
-        return new Entry(account, amount, signed, EntryDirection.CREDIT, layer, transaction);
+        return new Entry(account, amount, signed, EntryDirection.CREDIT, transaction);
     }
 }
