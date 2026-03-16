@@ -1,6 +1,6 @@
 package com.kutay.exchange.modules.wallet.domain.model;
 
-import com.kutay.exchange.shared.model.Asset;
+import com.kutay.exchange.shared.contracts.Asset;
 import jakarta.persistence.*;
 import org.hibernate.annotations.Immutable;
 
