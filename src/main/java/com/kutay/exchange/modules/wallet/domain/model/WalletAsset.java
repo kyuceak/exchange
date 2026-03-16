@@ -1,6 +1,6 @@
 package com.kutay.exchange.modules.wallet.domain.model;
 
-import com.kutay.exchange.shared.model.Asset;
+import com.kutay.exchange.shared.contracts.Asset;
 import com.kutay.exchange.shared.model.AbstractBaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
@@ -74,38 +74,17 @@ public class WalletAsset extends AbstractBaseEntity {
         return getTotalBalance().subtract(borrowedAmount).subtract(interestOwed);
     }
 
-    public void lockBalance(BigDecimal amount) {
+    public void debitAvailable(BigDecimal amount) {
         requirePositive(amount);
-        if (availableBalance.compareTo(amount) < 0) {
-            throw new IllegalArgumentException("Insufficient available balance");
-        }
-
+        wallet.requireActive();
         availableBalance = availableBalance.subtract(amount);
-        lockedBalance = lockedBalance.add(amount);
-    }
-
-    public void unlockBalance(BigDecimal amount) {
-        requirePositive(amount);
-        if (lockedBalance.compareTo(amount) < 0) {
-            throw new IllegalArgumentException("Insufficient locked balance");
-        }
-
-        availableBalance = availableBalance.add(amount);
-        lockedBalance = lockedBalance.subtract(amount);
     }
 
     public void creditAvailable(BigDecimal amount) {
-
-        if (availableBalance.compareTo(amount) < 0)
-            throw new IllegalArgumentException("Insufficient Balance");
-        availableBalance = availableBalance.subtract(amount);
-    }
-
-    public void debitAvailable(BigDecimal amount) {
         requirePositive(amount);
+        wallet.requireActive();
         availableBalance = availableBalance.add(amount);
     }
-
 
     private void requirePositive(BigDecimal amount) {
         // .signum() return the sign of the number
@@ -115,5 +94,15 @@ public class WalletAsset extends AbstractBaseEntity {
 
     public void markReferenceId(String referenceId) {
         this.lastReferenceId = referenceId;
+    }
+
+    public void lockBalance(BigDecimal amount) {
+        requirePositive(amount);
+        this.lockedBalance = this.lockedBalance.add(amount);
+    }
+
+    public void unlockBalance(BigDecimal amount) {
+        requirePositive(amount);
+        this.lockedBalance = this.lockedBalance.subtract(amount);
     }
 }
