@@ -1,6 +1,6 @@
 package com.kutay.exchange.modules.wallet.application.commands;
 
-import com.kutay.exchange.shared.model.Asset;
+import com.kutay.exchange.shared.contracts.Asset;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;

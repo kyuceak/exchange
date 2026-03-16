@@ -1,8 +1,8 @@
 package com.kutay.exchange.modules.wallet.application.commands;
 
 import com.kutay.exchange.modules.wallet.domain.model.WalletAsset;
+import com.kutay.exchange.modules.wallet.infrastructure.messaging.LedgerTransactionEvent;
 import com.kutay.exchange.modules.wallet.infrastructure.persistence.WalletAssetRepository;
-import com.kutay.exchange.shared.enums.EntryDirection;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,12 +19,12 @@ public class WalletProjectionUpdater {
     private final WalletCacheService walletCacheService;
 
     @Transactional
-    public void applyLedgerEntry(LedgerEntryEvent event) {
+    public void applyLedgerEntry(LedgerTransactionEvent event) {
         WalletAsset walletAsset = walletAssetRepository
                 .findByWalletIdAndAsset(event.walletId(), event.asset())
                 .orElseThrow(
                         () -> new EntityNotFoundException(
-                                "WalleAsset not found: wallet="
+                                "WalletAsset not found: wallet="
                                         + event.walletId() + ", asset=" + event.asset()));
 
         // idempotency Check
@@ -41,26 +41,27 @@ public class WalletProjectionUpdater {
         // invalidate cache
         walletCacheService.evictBalance(event.walletId(), event.asset());
 
-        log.info("Applied ledger entry: walletId={}, asset={}, " +
-                        "direction={}, amount={}", event.walletId(), event.asset(),
-                event.direction(), event.amount());
+        log.info("Applied ledger transaction: walletId={}, asset={}, transactionId={}", event.walletId(), event.asset(), event.transactionId());
     }
 
-    private void updateBalance(WalletAsset walletAsset, LedgerEntryEvent event) {
-        BigDecimal amount = event.amount();
+    private void updateBalance(WalletAsset walletAsset, LedgerTransactionEvent event) {
 
-        switch (event.direction()) {
-            case DEBIT -> {
-                switch (event.layer()) {
-                    case AVAILABLE -> walletAsset.debitAvailable(amount);
-                    case LOCKED -> walletAsset.lockBalance(amount);
+        for (LedgerTransactionEvent.TransactionEntry entry : event.entries()) {
+            BigDecimal amount = entry.amount();
+
+            switch (entry.direction()) {
+                case DEBIT -> {
+                    switch (entry.accountState()) {
+                        case "SETTLED" -> walletAsset.debitAvailable(amount);
+                        case "PENDING_DEBIT" -> walletAsset.unlockBalance(amount);
+                    }
                 }
-            }
 
-            case CREDIT -> {
-                switch (event.layer()) {
-                    case AVAILABLE -> walletAsset.creditAvailable(amount);
-                    case LOCKED -> walletAsset.unlockBalance(amount);
+                case CREDIT -> {
+                    switch (entry.accountState()) {
+                        case "SETTLED" -> walletAsset.creditAvailable(amount);
+                        case "PENDING_DEBIT" -> walletAsset.lockBalance(amount);
+                    }
                 }
             }
         }
