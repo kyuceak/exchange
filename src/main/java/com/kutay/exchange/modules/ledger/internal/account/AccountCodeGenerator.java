@@ -1,5 +1,6 @@
 package com.kutay.exchange.modules.ledger.internal.account;
 
+import com.kutay.exchange.modules.ledger.internal.account.model.enums.AccountState;
 import com.kutay.exchange.modules.ledger.internal.account.model.enums.AccountType;
 import com.kutay.exchange.modules.ledger.internal.account.model.enums.SystemAccountPurpose;
 import com.kutay.exchange.shared.contracts.Asset;
@@ -17,16 +18,16 @@ public class AccountCodeGenerator {
 
     // ------------- SYSTEM ACCOUNTS ------------
 
-    public static String generateSystem(AccountType accountType, Asset asset, SystemAccountPurpose purpose) {
+    public static String generateSystem(AccountType accountType, Asset asset, SystemAccountPurpose purpose, AccountState state) {
         validate(accountType, asset);
-        return String.join(":", accountType.name(), "SYSTEM", purpose.name(), asset.name());
+        return String.join(":", accountType.name(), "SYSTEM", purpose.name(), asset.name(), state.name());
     }
 
     // ------------- USER ACCOUNTS ----------------
 
-    public static String generateUser(AccountType accountType, Asset asset, UUID walletId) {
+    public static String generateUser(AccountType accountType, Asset asset, UUID walletId, AccountState state) {
         validate(accountType, asset);
-        return String.join(":", accountType.name(), "USER", walletId.toString(), asset.name());
+        return String.join(":", accountType.name(), "USER", walletId.toString(), asset.name(), state.name());
     }
 
     private static void validate(AccountType accountType, Asset asset) {

@@ -13,11 +13,16 @@ import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 
 import java.math.BigDecimal;
+import java.util.Objects;
 import java.util.UUID;
 
 @Entity
 @Table(name = "accounts",
         uniqueConstraints = {
+                @UniqueConstraint(
+                        name = "uk_account_wallet_asset_state",
+                        columnNames = {"wallet_id", "asset", "state"}
+                ),
                 @UniqueConstraint(
                         name = "uk_account_code",
                         columnNames = {"code"}
@@ -32,27 +37,49 @@ import java.util.UUID;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Account extends AbstractBaseEntity {
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID id;
-
-    public Account(UUID walletId,
-                   Asset asset,
-                   AccountType accountType,
-                   AccountScope scope,
-                   SystemAccountPurpose purpose,
-                   String metadata) {
+    private Account(UUID walletId,
+                    Asset asset,
+                    AccountType accountType,
+                    AccountScope scope,
+                    SystemAccountPurpose purpose,
+                    String metadata,
+                    AccountState state
+    ) {
         this.walletId = walletId;
         this.asset = asset;
         this.accountType = accountType;
         this.accountScope = scope;
         this.code = switch (scope) {
-            case SYSTEM -> AccountCodeGenerator.generateSystem(accountType, asset, purpose);
-            case USER -> AccountCodeGenerator.generateUser(accountType, asset, walletId);
+            case SYSTEM -> AccountCodeGenerator.generateSystem(accountType, asset, purpose, state);
+            case USER -> AccountCodeGenerator.generateUser(accountType, asset, walletId, state);
         };
         this.metadata = metadata;
         this.balance = BigDecimal.ZERO;
+        this.state = state;
     }
+
+    public static Account createUserAccount(UUID walletId, Asset asset, String metadata, AccountState state) {
+        Objects.requireNonNull(walletId, "walletId is required for user accounts");
+        Objects.requireNonNull(asset, "asset is required");
+        Objects.requireNonNull(state, "state is required");
+        return new Account(walletId, asset, AccountType.LIABILITY, AccountScope.USER, null, metadata, state);
+    }
+
+    public static Account createSystemAccount(Asset asset,
+                                              AccountType accountType,
+                                              SystemAccountPurpose purpose,
+                                              String metadata,
+                                              AccountState state) {
+        Objects.requireNonNull(asset, "asset is required");
+        Objects.requireNonNull(accountType, "accountType is required");
+        Objects.requireNonNull(purpose, "purpose is required for system accounts");
+        Objects.requireNonNull(state, "state is required");
+        return new Account(null, asset, accountType, AccountScope.SYSTEM, purpose, metadata, state);
+    }
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
 
     @Column(nullable = false)
     private BigDecimal balance;
@@ -64,7 +91,7 @@ public class Account extends AbstractBaseEntity {
     @Column(updatable = false, nullable = false)
     private AccountState state;
 
-    @Column(name = "wallet_id", nullable = false, updatable = false)
+    @Column(name = "wallet_id", updatable = false)
     private UUID walletId; // identity reference
 
     @Column(nullable = false, updatable = false)

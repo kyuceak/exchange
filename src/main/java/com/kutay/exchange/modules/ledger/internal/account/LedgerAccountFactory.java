@@ -49,7 +49,6 @@ public class LedgerAccountFactory {
 
     @Transactional
     public void createSystemLedger(Asset asset, AccountType accountType, SystemAccountPurpose purpose, AccountState state) {
-        UUID systemWalletId = UUID.fromString("00000000-0000-0000-0000-000000000000"); // mock walletId for system
         String code = AccountCodeGenerator.generateSystem(accountType, asset, purpose, state);
 
         Optional<Account> account = accountRepository.findByCode(code);
@@ -59,7 +58,7 @@ public class LedgerAccountFactory {
 
         try {
             accountRepository.save(
-                    Account.createSystemAccount(systemWalletId, asset, accountType, purpose, null, state)
+                    Account.createSystemAccount(asset, accountType, purpose, null, state)
             );
         } catch (DataIntegrityViolationException
                 exception) {

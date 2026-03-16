@@ -14,5 +14,13 @@ public enum Asset {
     // Fiat (if needed)
     USD,
     EUR,
-    TRY
+    TRY;
+
+
+    public static Asset fromCurrencyCode(String currency) {
+        return switch (currency) {
+            case "TRY" -> Asset.TRY;
+            default -> throw new IllegalStateException("Unexpected value: " + currency);
+        };
+    }
 }
