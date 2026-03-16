@@ -6,31 +6,23 @@ import com.kutay.exchange.shared.Mapper.BaseMapper;
 import com.kutay.exchange.modules.customer.web.dto.CustomerResponse;
 import org.springframework.stereotype.Component;
 
+import java.util.Objects;
+
 @Component
 public class CustomerMapper extends BaseMapper<Customer, CustomerRequest, CustomerResponse> {
     @Override
     public Customer convertToEntity(CustomerRequest dto, Object... args) {
-        Customer customer = new Customer();
-
-        if (dto != null) {
-            customer.setFirstName(dto.firstName());
-            customer.setLastName(dto.lastName());
-            customer.setPhoneNumber(dto.phoneNumber());
-            customer.setAddress(dto.address());
-        }
-
-        return customer;
+        Objects.requireNonNull(dto);
+        return new Customer(dto.nationalId(), dto.firstName(), dto.lastName(), dto.phoneNumber(), dto.address());
     }
 
     @Override
     public CustomerResponse convertToDTO(Customer entity, Object... args) {
-        CustomerResponse userResponse = new CustomerResponse(
+        return new CustomerResponse(
                 entity.getId(),
-                entity.getFirstName()
-                , entity.getLastName()
-                , entity.getAddress()
-                , entity.getPhoneNumber());
-
-        return userResponse;
+                entity.getFirstName(),
+                entity.getLastName(),
+                entity.getAddress(),
+                entity.getPhoneNumber());
     }
 }

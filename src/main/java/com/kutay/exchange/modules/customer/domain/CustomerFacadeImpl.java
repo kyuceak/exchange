@@ -40,4 +40,9 @@ public class CustomerFacadeImpl implements CustomerFacade {
     public boolean existsById(UUID id) {
         return customerService.existsById(id);
     }
+
+    @Override
+    public UUID getCustomerIdByNationalId(String nationalId) {
+        return customerService.getCustomerIdByNationalId(nationalId);
+    }
 }
