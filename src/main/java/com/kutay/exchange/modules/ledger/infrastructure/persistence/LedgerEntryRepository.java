@@ -1,7 +1,6 @@
 package com.kutay.exchange.modules.ledger.infrastructure.persistence;
 
 import com.kutay.exchange.modules.ledger.internal.entry.model.Entry;
-import com.kutay.exchange.shared.contracts.EntryLayer;
 import com.kutay.exchange.shared.contracts.Asset;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -45,18 +44,6 @@ public interface LedgerEntryRepository extends JpaRepository<Entry, UUID> {
     List<Entry> findByWalletIdAndAsset(@Param("walletId") UUID walletId,
                                        @Param("asset") Asset asset);
 
-    // Find all Entries by walletId,asset and layer
-    @Query("""
-            SELECT e FROM Entry e
-            JOIN e.account a
-            WHERE a.walletId = :walletId
-            AND a.asset = :asset
-            AND e.layer = :layer
-            """)
-    List<Entry> findByWalletIdAndAssetAndLayer(@Param("walletId") UUID walletId,
-                                               @Param("asset") Asset asset,
-                                               @Param("layer") EntryLayer layer);
-
     // Calculate balance from entries ( source of truth )
     @Query("""
             SELECT COALESCE(SUM(e.signedAmount), 0)
@@ -64,11 +51,9 @@ public interface LedgerEntryRepository extends JpaRepository<Entry, UUID> {
             JOIN e.account a
             WHERE a.walletId = :walletId
             AND a.asset = :asset
-            AND e.layer = :layer
             """)
     BigDecimal calculateBalance(@Param("walletId") UUID walletId,
-                                @Param("asset") Asset asset,
-                                @Param("layer") EntryLayer layer);
+                                @Param("asset") Asset asset);
 
 
     @Query("""
@@ -77,9 +62,7 @@ public interface LedgerEntryRepository extends JpaRepository<Entry, UUID> {
             JOIN Account a
             WHERE a.id = :accountId
             AND a.asset = :asset
-            AND e.layer = :layer
             """)
     BigDecimal calculateBalanceByAccountId(@Param("accountId") UUID accountId,
-                                           @Param("asset") Asset asset,
-                                           @Param("layer") EntryLayer layer);
+                                           @Param("asset") Asset asset);
 }
