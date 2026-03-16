@@ -51,4 +51,8 @@ public class CustomerServiceImpl {
     public boolean existsById(UUID id) {
         return customerRepository.existsById(id);
     }
+
+    public UUID getCustomerIdByNationalId(String nationalId) {
+        return customerRepository.getCustomerIdByNationalId(nationalId);
+    }
 }

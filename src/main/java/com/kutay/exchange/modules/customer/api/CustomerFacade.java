@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.UUID;
 
 public interface CustomerFacade {
-
     CustomerResponse createCustomer(CustomerRequest request);
 
     CustomerResponse readUser(UUID customerId);
@@ -16,4 +15,6 @@ public interface CustomerFacade {
     List<CustomerResponse> readUsers();
 
     boolean existsById(UUID id);
+
+    UUID getCustomerIdByNationalId(String nationalId);
 }
