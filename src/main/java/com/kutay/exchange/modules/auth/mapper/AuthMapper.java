@@ -42,9 +42,6 @@ public class AuthMapper extends BaseMapper<AuthCredentialsEntity, RegisterReques
     }
 
     public CustomerRequest convertToCustomerRequest(RegisterRequest dto) {
-
-        CustomerRequest req = new CustomerRequest(dto.firstName(), dto.lastName(), dto.phoneNumber(), dto.address());
-
-        return req;
+        return new CustomerRequest(dto.nationalId(), dto.firstName(), dto.lastName(), dto.phoneNumber(), dto.address());
     }
 }
