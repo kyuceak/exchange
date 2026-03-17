@@ -19,7 +19,7 @@ import java.util.UUID;
 )
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class FiatPayment extends Payment {
+public class BankTransfer extends Payment {
     private String iban;
 
     @Column(nullable = false, updatable = false)
@@ -37,15 +37,15 @@ public class FiatPayment extends Payment {
     @Column(nullable = false)
     private String receiverAccount;
 
-    private FiatPayment(UUID walletId,
-                        Direction direction,
-                        Asset asset,
-                        BigDecimal amount,
-                        String iban,
-                        String bankRef,
-                        String receiverAccount,
-                        String senderName,
-                        String swift) {
+    private BankTransfer(UUID walletId,
+                         Direction direction,
+                         Asset asset,
+                         BigDecimal amount,
+                         String iban,
+                         String bankRef,
+                         String receiverAccount,
+                         String senderName,
+                         String swift) {
         super(walletId, direction, asset,
                 PaymentMethod.FIAT, amount);
         this.iban = iban;
@@ -57,14 +57,14 @@ public class FiatPayment extends Payment {
     }
 
 
-    public static FiatPayment localDeposit(UUID walletId,
-                                           Asset asset,
-                                           BigDecimal amount,
-                                           String iban,
-                                           String bankRef,
-                                           String receiverAccount,
-                                           String senderName) {
-        return new FiatPayment(walletId,
+    public static BankTransfer localDeposit(UUID walletId,
+                                            Asset asset,
+                                            BigDecimal amount,
+                                            String iban,
+                                            String bankRef,
+                                            String receiverAccount,
+                                            String senderName) {
+        return new BankTransfer(walletId,
                 Direction.DEPOSIT,
                 asset,
                 amount,
@@ -75,14 +75,14 @@ public class FiatPayment extends Payment {
                 null);
     }
 
-    public static FiatPayment localWithdraw(UUID walletId,
-                                            Asset asset,
-                                            BigDecimal amount,
-                                            String iban,
-                                            String bankRef,
-                                            String receiverAccount,
-                                            String senderName) {
-        return new FiatPayment(walletId,
+    public static BankTransfer localWithdraw(UUID walletId,
+                                             Asset asset,
+                                             BigDecimal amount,
+                                             String iban,
+                                             String bankRef,
+                                             String receiverAccount,
+                                             String senderName) {
+        return new BankTransfer(walletId,
                 Direction.WITHDRAW,
                 asset,
                 amount,
@@ -93,15 +93,15 @@ public class FiatPayment extends Payment {
                 null);
     }
 
-    public static FiatPayment internationalDeposit(UUID walletId,
-                                                   Asset asset,
-                                                   BigDecimal amount,
-                                                   String iban,
-                                                   String bankRef,
-                                                   String receiverAccount,
-                                                   String senderName,
-                                                   String swift) {
-        return new FiatPayment(walletId,
+    public static BankTransfer internationalDeposit(UUID walletId,
+                                                    Asset asset,
+                                                    BigDecimal amount,
+                                                    String iban,
+                                                    String bankRef,
+                                                    String receiverAccount,
+                                                    String senderName,
+                                                    String swift) {
+        return new BankTransfer(walletId,
                 Direction.DEPOSIT,
                 asset,
                 amount,
@@ -112,15 +112,15 @@ public class FiatPayment extends Payment {
                 swift);
     }
 
-    public static FiatPayment internationalWithdraw(UUID walletId,
-                                                    Asset asset,
-                                                    BigDecimal amount,
-                                                    String iban,
-                                                    String bankRef,
-                                                    String receiverAccount,
-                                                    String senderName,
-                                                    String swift) {
-        return new FiatPayment(walletId,
+    public static BankTransfer internationalWithdraw(UUID walletId,
+                                                     Asset asset,
+                                                     BigDecimal amount,
+                                                     String iban,
+                                                     String bankRef,
+                                                     String receiverAccount,
+                                                     String senderName,
+                                                     String swift) {
+        return new BankTransfer(walletId,
                 Direction.WITHDRAW,
                 asset,
                 amount,
