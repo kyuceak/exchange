@@ -17,20 +17,20 @@ import java.util.UUID;
 
 @Entity
 @Table(
-        name = "outbox_events",
+        name = "payment_outbox_events",
         indexes = {@Index(name = "idx_status_sending_at", columnList = "event_status, sending_at")}
 )
 @RequiredArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-public class OutboxEvent {
+public class PaymentOutboxEvent {
     @Id
     private UUID id;
 
-    public OutboxEvent(UUID id,
-                       String aggregateId,
-                       AggregateType aggregateType,
-                       PaymentEventType paymentEventType,
-                       Map<String, Object> payload) {
+    public PaymentOutboxEvent(UUID id,
+                              String aggregateId,
+                              AggregateType aggregateType,
+                              PaymentEventType paymentEventType,
+                              Map<String, Object> payload) {
         this.id = id;
         this.aggregateId = aggregateId;
         this.aggregateType = aggregateType;
@@ -39,7 +39,6 @@ public class OutboxEvent {
         this.retryCount = 0;
         this.eventStatus = EventStatus.PENDING;
     }
-
 
     @Column(nullable = false, updatable = false)
     private String aggregateId; // The ID of the entity this event is about. (links back to the source record)
@@ -56,7 +55,7 @@ public class OutboxEvent {
     private PaymentEventType paymentEventType;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false, updatable = false)
+    @Column(nullable = false)
     private EventStatus eventStatus;
 
     private int retryCount;
@@ -78,20 +77,5 @@ public class OutboxEvent {
         if (this.createdAt == null) {
             this.createdAt = Instant.now();
         }
-    }
-
-    public void markProcessed() {
-        this.processedAt = Instant.now();
-    }
-
-    // below methods are good for synchronous flows, but can not be used in cross-thread flows
-    public void markSending() {
-        this.sendingAt = Instant.now();
-        this.eventStatus = EventStatus.SENDING;
-    }
-
-    public void markSent() {
-        this.processedAt = Instant.now();
-        this.eventStatus = EventStatus.SENT;
     }
 }
