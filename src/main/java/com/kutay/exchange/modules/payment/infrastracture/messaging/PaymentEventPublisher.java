@@ -4,10 +4,10 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kutay.exchange.modules.payment.domain.models.BankTransfer;
 import com.kutay.exchange.modules.payment.infrastracture.messaging.events.FiatDepositRecorded;
-import com.kutay.exchange.modules.payment.infrastracture.messaging.outbox.OutboxEvent;
+import com.kutay.exchange.modules.payment.infrastracture.messaging.outbox.PaymentOutboxEvent;
 import com.kutay.exchange.modules.payment.infrastracture.messaging.outbox.enums.AggregateType;
 import com.kutay.exchange.modules.payment.infrastracture.messaging.outbox.enums.PaymentEventType;
-import com.kutay.exchange.modules.payment.infrastracture.persistence.OutboxRepository;
+import com.kutay.exchange.modules.payment.infrastracture.persistence.PaymentOutboxRepository;
 import com.kutay.exchange.modules.payment.web.dto.FiatDepositWebhook;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,7 +20,7 @@ import java.util.UUID;
 @Slf4j
 @RequiredArgsConstructor
 public class PaymentEventPublisher {
-    private final OutboxRepository outboxRepository;
+    private final PaymentOutboxRepository paymentOutboxRepository;
     private final ObjectMapper objectMapper;
 
     public void publish(FiatDepositWebhook fiatDepositWebhook, BankTransfer bankTransfer) {
@@ -37,13 +37,13 @@ public class PaymentEventPublisher {
                 new TypeReference<Map<String, Object>>() {
                 });
 
-        OutboxEvent outboxEvent = new OutboxEvent(eventId,
+        PaymentOutboxEvent paymentOutboxEvent = new PaymentOutboxEvent(eventId,
                 bankTransfer.getId().toString(),
                 AggregateType.PAYMENT,
                 PaymentEventType.BANK_DEPOSIT_RECORDED,
                 event
         );
 
-        outboxRepository.save(outboxEvent);
+        paymentOutboxRepository.save(paymentOutboxEvent);
     }
 }
