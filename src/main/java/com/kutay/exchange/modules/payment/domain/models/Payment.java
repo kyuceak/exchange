@@ -30,7 +30,9 @@ public abstract class Payment extends AbstractBaseEntity {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @Column(updatable = false, nullable = false)
+//    @Column(updatable = false, nullable = false)
+//    private UUID walletId; // I feel like we do not need it. remove it later
+
     private UUID walletId;
 
     @Enumerated(EnumType.STRING)

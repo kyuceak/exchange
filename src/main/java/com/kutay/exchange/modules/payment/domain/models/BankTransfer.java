@@ -15,11 +15,13 @@ import java.util.UUID;
 @Entity
 @Table(
         indexes = {@Index(name = "idx_bank_ref", columnList = "bank_ref")},
-        uniqueConstraints = @UniqueConstraint(name = "uk_fiat_bank_ref", columnNames = {"bank_ref"})
+        uniqueConstraints = @UniqueConstraint(name = BankTransfer.UK_BANK_REF, columnNames = {"bank_ref"})
 )
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class BankTransfer extends Payment {
+    public static final String UK_BANK_REF = "uk_fiat_bank_ref";
+
     private String iban;
 
     @Column(nullable = false, updatable = false)
@@ -64,7 +66,8 @@ public class BankTransfer extends Payment {
                                             String bankRef,
                                             String receiverAccount,
                                             String senderName) {
-        return new BankTransfer(walletId,
+        return new BankTransfer(
+                walletId,
                 Direction.DEPOSIT,
                 asset,
                 amount,
@@ -78,17 +81,18 @@ public class BankTransfer extends Payment {
     public static BankTransfer localWithdraw(UUID walletId,
                                              Asset asset,
                                              BigDecimal amount,
-                                             String iban,
+                                             String senderIban,
                                              String bankRef,
-                                             String receiverAccount,
+                                             String receivingIban,
                                              String senderName) {
-        return new BankTransfer(walletId,
+        return new BankTransfer(
+                walletId,
                 Direction.WITHDRAW,
                 asset,
                 amount,
-                iban,
+                senderIban,
                 bankRef,
-                receiverAccount,
+                receivingIban,
                 senderName,
                 null);
     }
@@ -96,18 +100,19 @@ public class BankTransfer extends Payment {
     public static BankTransfer internationalDeposit(UUID walletId,
                                                     Asset asset,
                                                     BigDecimal amount,
-                                                    String iban,
+                                                    String senderIban,
                                                     String bankRef,
-                                                    String receiverAccount,
+                                                    String receivingIban,
                                                     String senderName,
                                                     String swift) {
-        return new BankTransfer(walletId,
+        return new BankTransfer(
+                walletId,
                 Direction.DEPOSIT,
                 asset,
                 amount,
-                iban,
+                senderIban,
                 bankRef,
-                receiverAccount,
+                receivingIban,
                 senderName,
                 swift);
     }
@@ -115,18 +120,19 @@ public class BankTransfer extends Payment {
     public static BankTransfer internationalWithdraw(UUID walletId,
                                                      Asset asset,
                                                      BigDecimal amount,
-                                                     String iban,
+                                                     String senderIban,
                                                      String bankRef,
-                                                     String receiverAccount,
+                                                     String receivingIban,
                                                      String senderName,
                                                      String swift) {
-        return new BankTransfer(walletId,
+        return new BankTransfer(
+                walletId,
                 Direction.WITHDRAW,
                 asset,
                 amount,
-                iban,
+                senderIban,
                 bankRef,
-                receiverAccount,
+                receivingIban,
                 senderName,
                 swift);
     }

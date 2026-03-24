@@ -1,6 +1,6 @@
 package com.kutay.exchange.modules.payment.infrastracture.persistence;
 
-import com.kutay.exchange.modules.payment.domain.models.FiatPayment;
+import com.kutay.exchange.modules.payment.domain.models.BankTransfer;
 import com.kutay.exchange.modules.payment.domain.models.enums.FiatState;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -13,12 +13,12 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Repository
-public interface FiatPaymentRepository extends JpaRepository<FiatPayment, UUID> {
-    Optional<FiatPayment> findByBankRef(String bankRef);
+public interface BankTransferRepository extends JpaRepository<BankTransfer, UUID> {
+    Optional<BankTransfer> findByBankRef(String bankRef);
 
     @Query("""
             SELECT f.id
-            FROM FiatPayment f
+            FROM BankTransfer f
             WHERE f.state = :state
             AND f.nextRetryAt < :now
             """)

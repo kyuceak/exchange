@@ -16,7 +16,7 @@ public interface CryptoPaymentRepository extends JpaRepository<CryptoPayment, UU
 
     @Query("""
             SELECT f.id
-            FROM FiatPayment f
+            FROM CryptoPayment f
             WHERE f.state = :state
             AND f.nextRetryAt < :now
             """)
