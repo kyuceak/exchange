@@ -28,6 +28,7 @@ public class PaymentEventPublisher {
         UUID eventId = UUID.randomUUID();
 
         FiatDepositRecorded fiatDepositRecorded = new FiatDepositRecorded(eventId.toString(),
+                bankTransfer.getWalletId().toString(),
                 fiatDepositWebhook.nationalId(),
                 fiatDepositWebhook.asset(),
                 fiatDepositWebhook.amount().toString(),

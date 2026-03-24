@@ -43,7 +43,7 @@ public class CardDeposit extends AbstractBaseEntity {
     private String cardBrand;
 
     @Column()
-    private String gatewayPaymentId;
+    private String gatewayPaymentId; // the id returned by payment provider
 
     @Column(nullable = false)
     private String referenceId;
@@ -111,8 +111,9 @@ public class CardDeposit extends AbstractBaseEntity {
      * Called when money has actually arrived in our account.
      */
     public void settled(String gatewayPaymentId) {
-        this.assertState(FiatState.AUTHORIZED, "");
+        this.assertState(FiatState.AUTHORIZED, "settle");
         Objects.requireNonNull(gatewayPaymentId, "gatewayPaymentId must not be null");
+        this.gatewayPaymentId = gatewayPaymentId;
         this.state = FiatState.SETTLED;
     }
 
