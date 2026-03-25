@@ -1,6 +1,6 @@
 package com.kutay.exchange.modules.payment.domain.models;
 
-import com.kutay.exchange.modules.payment.domain.models.enums.FiatState;
+import com.kutay.exchange.modules.payment.domain.models.enums.TransferState;
 import com.kutay.exchange.shared.contracts.Direction;
 import com.kutay.exchange.modules.payment.domain.models.enums.PaymentMethod;
 import com.kutay.exchange.shared.contracts.Asset;
@@ -29,7 +29,7 @@ public class BankTransfer extends Payment {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private FiatState state;
+    private TransferState state;
 
     private String swift;
 
@@ -55,7 +55,7 @@ public class BankTransfer extends Payment {
         this.receiverAccount = receiverAccount;
         this.senderName = senderName;
         this.swift = swift;
-        this.state = FiatState.CREATED;
+        this.state = TransferState.CREATED;
     }
 
 
@@ -137,28 +137,30 @@ public class BankTransfer extends Payment {
                 swift);
     }
 
-    public void sendToProvider() {
-        if (state != FiatState.CREATED) {
-            throw new IllegalStateException("Fiat payment already started, id: " + getId());
+    public void markProcessing() {
+        if (state != TransferState.CREATED) {
+            throw new IllegalStateException("Can not process transfer. state is not CREATED");
         }
-        this.state = FiatState.PENDING_PROVIDER;
+        state = TransferState.PROCESSING;
     }
 
-    public void authorize() {
-        if (state != FiatState.PENDING_PROVIDER) {
-            throw new IllegalStateException("Cannot authorize from state: " + state + " id: " + getId());
+    public void markCompleted() {
+        if (state != TransferState.PROCESSING) {
+            throw new IllegalStateException("Can not process transfer. state is not PROCESSING");
         }
-        this.state = FiatState.AUTHORIZED;
+        state = TransferState.COMPLETED;
     }
 
-    public void settle() {
-        if (state != FiatState.AUTHORIZED) {
-            throw new IllegalStateException("Cannot settle from state: " + state + " id: " + getId());
-        }
-        this.state = FiatState.SETTLED;
+    public void markFailed() {
+        state = TransferState.FAILED;
     }
 
-    public void decline() {
-        this.state = FiatState.DECLINED;
+    public void markReversed() {
+        if (state != TransferState.FAILED) {
+            throw new IllegalStateException("Transfer must fail before reverse operation");
+        }
+        state = TransferState.REVERSED;
     }
+
+
 }

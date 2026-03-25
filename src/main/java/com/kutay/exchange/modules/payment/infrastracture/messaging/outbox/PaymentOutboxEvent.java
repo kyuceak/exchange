@@ -24,14 +24,14 @@ import java.util.UUID;
 @Getter
 public class PaymentOutboxEvent {
     @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    public PaymentOutboxEvent(UUID id,
-                              String aggregateId,
-                              AggregateType aggregateType,
-                              PaymentEventType paymentEventType,
-                              Map<String, Object> payload) {
-        this.id = id;
+    public PaymentOutboxEvent(
+            String aggregateId,
+            AggregateType aggregateType,
+            PaymentEventType paymentEventType,
+            Map<String, Object> payload) {
         this.aggregateId = aggregateId;
         this.aggregateType = aggregateType;
         this.paymentEventType = paymentEventType;
