@@ -14,7 +14,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
-import java.util.UUID;
 
 @Component
 @Slf4j
@@ -25,20 +24,19 @@ public class PaymentEventPublisher {
 
     public void publish(FiatDepositWebhook fiatDepositWebhook, BankTransfer bankTransfer) {
 
-        UUID eventId = UUID.randomUUID();
 
-        FiatDepositRecorded fiatDepositRecorded = new FiatDepositRecorded(eventId.toString(),
+        FiatDepositRecorded fiatDepositRecorded = new FiatDepositRecorded(
                 bankTransfer.getWalletId().toString(),
                 fiatDepositWebhook.nationalId(),
                 fiatDepositWebhook.asset(),
                 fiatDepositWebhook.amount().toString(),
-                fiatDepositWebhook.bankRef());
+                bankTransfer.getReferenceId());
 
         Map<String, Object> event = objectMapper.convertValue(fiatDepositRecorded,
                 new TypeReference<Map<String, Object>>() {
                 });
 
-        PaymentOutboxEvent paymentOutboxEvent = new PaymentOutboxEvent(eventId,
+        PaymentOutboxEvent paymentOutboxEvent = new PaymentOutboxEvent(
                 bankTransfer.getId().toString(),
                 AggregateType.PAYMENT,
                 PaymentEventType.BANK_DEPOSIT_RECORDED,
@@ -46,5 +44,6 @@ public class PaymentEventPublisher {
         );
 
         paymentOutboxRepository.save(paymentOutboxEvent);
+        bankTransfer.markProcessing();
     }
 }

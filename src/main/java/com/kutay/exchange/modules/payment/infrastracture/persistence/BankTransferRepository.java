@@ -14,6 +14,8 @@ import java.util.UUID;
 
 @Repository
 public interface BankTransferRepository extends JpaRepository<BankTransfer, UUID> {
+    Optional<BankTransfer> findByReferenceId(String referenceId);
+
     Optional<BankTransfer> findByBankRef(String bankRef);
 
     @Query("""
