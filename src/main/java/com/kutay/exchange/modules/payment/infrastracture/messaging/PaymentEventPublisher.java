@@ -44,6 +44,5 @@ public class PaymentEventPublisher {
         );
 
         paymentOutboxRepository.save(paymentOutboxEvent);
-        bankTransfer.markProcessing();
     }
 }
