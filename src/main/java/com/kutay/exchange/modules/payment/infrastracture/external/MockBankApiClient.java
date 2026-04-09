@@ -55,6 +55,7 @@ public class MockBankApiClient implements BankApiClient {
                 log.info("Mock bank webhook sent. bankRef={}", bankRef);
             } catch (Exception e) {
                 log.error("Mock bank webhook failed. referenceId: {}", withdraw.getReferenceId(), e);
+                Thread.currentThread().interrupt();
             }
         });
     }
